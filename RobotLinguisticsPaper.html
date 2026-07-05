@@ -1,0 +1,2192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Robot Linguistics: Causal Grounding in Robotic Communication Beyond the Octopus Analogy</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --text:       #1a1a2e;
+    --muted:      #4a4a6a;
+    --accent:     #2d5be3;
+    --accent-light: #eef2fd;
+    --rule:       #d0d4e8;
+    --bg:         #fafafa;
+    --paper:      #ffffff;
+    --code-bg:    #1e1e2e;
+    --code-text:  #cdd6f4;
+    --kw:         #89b4fa;
+    --fn:         #89dceb;
+    --str:        #a6e3a1;
+    --cm:         #6c7086;
+    --num:        #fab387;
+    --op:         #f38ba8;
+    --cls:        #f9e2af;
+    --serif:      Georgia, 'Times New Roman', serif;
+    --sans:       'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --mono:       'Menlo', 'Consolas', 'Courier New', monospace;
+  }
+
+  html { font-size: 16px; background: var(--bg); color: var(--text); }
+
+  body {
+    font-family: var(--sans);
+    line-height: 1.75;
+    padding: 0;
+  }
+
+  /* ── Page Shell ── */
+  .page-wrapper {
+    max-width: 820px;
+    margin: 48px auto 80px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    box-shadow: 0 4px 32px rgba(0,0,0,.08);
+    padding: 64px 72px;
+  }
+
+  @media (max-width: 900px) {
+    .page-wrapper { margin: 0; border-radius: 0; padding: 40px 28px; }
+  }
+
+  /* ── Header ── */
+  .paper-header { text-align: center; margin-bottom: 48px; }
+
+  .paper-venue {
+    display: inline-block;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-light);
+    border: 1px solid #c0cef7;
+    border-radius: 3px;
+    padding: 3px 10px;
+    margin-bottom: 22px;
+  }
+
+  .paper-title-en {
+    font-family: var(--sans);
+    font-size: 1.85rem;
+    font-weight: 800;
+    line-height: 1.25;
+    color: var(--text);
+    letter-spacing: -.02em;
+    margin-bottom: 10px;
+  }
+
+  .paper-title-ko {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 28px;
+    letter-spacing: .01em;
+  }
+
+  .paper-authors {
+    font-size: .95rem;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .paper-affiliation {
+    font-size: .83rem;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .paper-meta {
+    font-size: .78rem;
+    color: var(--muted);
+    letter-spacing: .04em;
+  }
+
+  .header-rule {
+    border: none;
+    border-top: 2px solid var(--rule);
+    margin: 28px 0;
+  }
+
+  /* ── Abstract Block ── */
+  .abstract-block {
+    background: var(--accent-light);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    padding: 22px 28px;
+    margin-bottom: 16px;
+  }
+
+  .abstract-block .abs-label {
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .abstract-block p {
+    font-size: .9rem;
+    line-height: 1.7;
+    color: var(--text);
+    font-family: var(--serif);
+  }
+
+  .abstract-ko {
+    background: #f6f4ff;
+    border-left: 4px solid #8b5cf6;
+    border-radius: 0 6px 6px 0;
+    padding: 18px 24px;
+    margin-bottom: 28px;
+  }
+
+  .abstract-ko .abs-label { color: #7c3aed; font-size: .72rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 8px; }
+
+  .abstract-ko p { font-size: .875rem; color: #3d3060; line-height: 1.8; }
+
+  /* ── Keywords ── */
+  .keywords-block {
+    margin-bottom: 36px;
+    font-size: .82rem;
+    color: var(--muted);
+  }
+
+  .keywords-block strong { color: var(--text); }
+
+  .kw-tag {
+    display: inline-block;
+    background: #f0f0f8;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 2px 10px;
+    margin: 2px 3px;
+    font-size: .78rem;
+    color: var(--muted);
+  }
+
+  /* ── Section Headings ── */
+  .section { margin-bottom: 44px; }
+
+  h2.sec-heading {
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--text);
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--rule);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  h2.sec-heading .sec-num {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: var(--accent);
+    min-width: 28px;
+  }
+
+  h3.sub-heading {
+    font-size: .97rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 24px 0 10px;
+    letter-spacing: -.01em;
+  }
+
+  h3.sub-heading .sub-num {
+    color: var(--accent);
+    margin-right: 6px;
+  }
+
+  h4.sub-sub-heading {
+    font-size: .88rem;
+    font-weight: 700;
+    color: var(--muted);
+    margin: 16px 0 6px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  /* ── Body Text ── */
+  p { font-size: .925rem; line-height: 1.8; color: var(--text); margin-bottom: 14px; }
+
+  em { font-style: italic; }
+  strong { font-weight: 700; }
+
+  /* ── Callout Box ── */
+  .callout {
+    border: 1px solid #c8d8ff;
+    background: var(--accent-light);
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: .875rem;
+  }
+
+  .callout.green { border-color: #a8e6c0; background: #f0faf4; }
+  .callout.amber { border-color: #f5d9a0; background: #fffbf0; }
+  .callout.purple { border-color: #d4c0f5; background: #f8f4ff; }
+
+  .callout-title {
+    font-weight: 800;
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin-bottom: 6px;
+    color: var(--accent);
+  }
+
+  .callout.green .callout-title { color: #1a7a40; }
+  .callout.amber .callout-title { color: #92600a; }
+  .callout.purple .callout-title { color: #6b21c8; }
+
+  /* ── Code Blocks ── */
+  .code-wrapper {
+    margin: 24px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #2a2a3e;
+    box-shadow: 0 4px 16px rgba(0,0,0,.18);
+  }
+
+  .code-header {
+    background: #2a2a3e;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .code-dots { display: flex; gap: 6px; }
+  .code-dots span {
+    width: 11px; height: 11px; border-radius: 50%;
+  }
+  .code-dots span:nth-child(1) { background: #ff5f57; }
+  .code-dots span:nth-child(2) { background: #febc2e; }
+  .code-dots span:nth-child(3) { background: #28c840; }
+
+  .code-filename {
+    font-family: var(--mono);
+    font-size: .75rem;
+    color: #7c7c9a;
+    margin-left: 4px;
+    flex: 1;
+  }
+
+  .code-lang {
+    font-size: .68rem;
+    color: var(--kw);
+    font-family: var(--mono);
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  pre.code-body {
+    background: var(--code-bg);
+    padding: 20px 22px;
+    overflow-x: auto;
+    margin: 0;
+    font-family: var(--mono);
+    font-size: .8rem;
+    line-height: 1.65;
+    color: var(--code-text);
+    tab-size: 4;
+  }
+
+  /* Syntax token classes */
+  .kw  { color: var(--kw);  font-weight: 600; }
+  .fn  { color: var(--fn); }
+  .str { color: var(--str); }
+  .cm  { color: var(--cm); font-style: italic; }
+  .num { color: var(--num); }
+  .op  { color: var(--op); }
+  .cls { color: var(--cls); font-weight: 700; }
+  .punc { color: #cdd6f4; }
+
+  /* ── Tables ── */
+  .table-wrapper {
+    overflow-x: auto;
+    margin: 24px 0;
+    border-radius: 8px;
+    border: 1px solid var(--rule);
+    box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  }
+
+  .table-caption {
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 8px;
+    padding-left: 2px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .82rem;
+  }
+
+  thead tr {
+    background: #f2f4fb;
+  }
+
+  thead th {
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 700;
+    font-size: .76rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 2px solid var(--rule);
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #eaeef8;
+    transition: background .12s;
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #f8f9ff; }
+  tbody tr:nth-child(even) { background: #fafbff; }
+  tbody tr:nth-child(even):hover { background: #f4f5ff; }
+
+  td {
+    padding: 9px 14px;
+    vertical-align: middle;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .tag-pass {
+    display: inline-block;
+    background: #d4f4e2;
+    color: #166534;
+    border: 1px solid #86efac;
+    border-radius: 10px;
+    font-size: .72rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    letter-spacing: .04em;
+  }
+
+  .tag-fail {
+    display: inline-block;
+    background: #fce8e8;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+    border-radius: 10px;
+    font-size: .72rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    letter-spacing: .04em;
+  }
+
+  .tag-causal {
+    display: inline-block;
+    background: #e0f0ff;
+    color: #1d4ed8;
+    border: 1px solid #93c5fd;
+    border-radius: 10px;
+    font-size: .72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+  }
+
+  .tag-stat {
+    display: inline-block;
+    background: #fff7e0;
+    color: #92600a;
+    border: 1px solid #fde68a;
+    border-radius: 10px;
+    font-size: .72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+  }
+
+  .tag-none {
+    display: inline-block;
+    background: #f0f0f4;
+    color: #6b7280;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: .72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+  }
+
+  /* ── Figures ── */
+  .figure-wrapper {
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 24px;
+    margin: 28px 0;
+    background: #f8f9ff;
+    text-align: center;
+  }
+
+  .figure-caption {
+    font-size: .8rem;
+    color: var(--muted);
+    margin-top: 14px;
+    font-style: italic;
+  }
+
+  .figure-caption strong { font-style: normal; color: var(--text); }
+
+  /* ── Architecture Diagram (pure CSS/SVG) ── */
+  .arch-diagram {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 0;
+  }
+
+  .arch-box {
+    background: var(--paper);
+    border: 2px solid var(--accent);
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-size: .8rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-align: center;
+    min-width: 130px;
+    box-shadow: 0 2px 8px rgba(45,91,227,.12);
+    position: relative;
+  }
+
+  .arch-box small {
+    display: block;
+    font-size: .68rem;
+    font-weight: 400;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  .arch-box.green { border-color: #16a34a; color: #16a34a; }
+  .arch-box.amber { border-color: #d97706; color: #d97706; }
+  .arch-box.purple { border-color: #7c3aed; color: #7c3aed; }
+  .arch-box.red { border-color: #dc2626; color: #dc2626; }
+
+  .arch-arrow {
+    font-size: 1.4rem;
+    color: var(--muted);
+    padding: 0 8px;
+    align-self: center;
+  }
+
+  .arch-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  /* ── Inline code ── */
+  code {
+    font-family: var(--mono);
+    font-size: .82em;
+    background: #f0f2f8;
+    border: 1px solid #dde2ef;
+    border-radius: 3px;
+    padding: 1px 5px;
+    color: #2d3a8c;
+  }
+
+  /* ── Blockquote ── */
+  blockquote {
+    border-left: 4px solid #d0d8f0;
+    padding: 10px 20px;
+    margin: 18px 0;
+    color: var(--muted);
+    font-family: var(--serif);
+    font-size: .9rem;
+    font-style: italic;
+    background: #f8f9ff;
+    border-radius: 0 6px 6px 0;
+  }
+
+  blockquote cite {
+    display: block;
+    font-size: .8rem;
+    color: #8888aa;
+    margin-top: 6px;
+    font-style: normal;
+  }
+
+  /* ── Lists ── */
+  ul, ol { padding-left: 24px; margin: 10px 0 14px; }
+  li { font-size: .925rem; line-height: 1.75; color: var(--text); margin-bottom: 4px; }
+
+  /* ── Definition list ── */
+  dl { margin: 14px 0; }
+  dt { font-weight: 700; font-size: .9rem; color: var(--text); margin-top: 10px; }
+  dd { font-size: .875rem; color: var(--muted); margin-left: 20px; }
+
+  /* ── Essay grid ── */
+  .essay-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .essay-card {
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 14px 16px;
+    background: var(--paper);
+    font-size: .82rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+  }
+
+  .essay-card .essay-num {
+    font-size: .68rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 5px;
+  }
+
+  .essay-card .essay-title {
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+    font-size: .85rem;
+  }
+
+  .essay-card .essay-meta {
+    font-size: .75rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .essay-card .essay-ground {
+    margin-top: 7px;
+    font-size: .72rem;
+  }
+
+  /* ── Formal definition box ── */
+  .formal-def {
+    border: 1px solid #c8d8ff;
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin: 20px 0;
+    background: #f6f9ff;
+    font-family: var(--serif);
+    font-size: .9rem;
+  }
+
+  .formal-def .def-label {
+    font-family: var(--sans);
+    font-size: .72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .formal-def p { font-family: var(--serif); font-size: .9rem; }
+
+  /* ── References ── */
+  .references ol {
+    padding-left: 28px;
+  }
+
+  .references li {
+    font-size: .84rem;
+    line-height: 1.65;
+    margin-bottom: 10px;
+    color: var(--muted);
+  }
+
+  .references li strong { color: var(--text); }
+
+  .ref-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: .8rem;
+  }
+
+  /* ── Footer ── */
+  .paper-footer {
+    margin-top: 56px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    font-size: .76rem;
+    color: #9999bb;
+    text-align: center;
+    line-height: 1.8;
+  }
+
+  /* ── Divider ── */
+  .section-rule {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 40px 0;
+  }
+
+  /* ── Contribution list ── */
+  .contrib-list {
+    list-style: none;
+    padding: 0;
+    margin: 14px 0;
+  }
+
+  .contrib-list li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid #eaeef8;
+    font-size: .9rem;
+  }
+
+  .contrib-list li:last-child { border-bottom: none; }
+
+  .contrib-icon {
+    width: 22px;
+    height: 22px;
+    background: var(--accent);
+    border-radius: 50%;
+    color: white;
+    font-size: .7rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── Comparison Table ── */
+  .comparison-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: .78rem;
+  }
+
+  .bar-fill {
+    height: 8px;
+    border-radius: 4px;
+    background: var(--accent);
+  }
+
+  /* ── Two-column layout for small content ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 16px 0;
+  }
+
+  @media (max-width: 600px) {
+    .two-col { grid-template-columns: 1fr; }
+    .arch-row { flex-direction: column; }
+  }
+
+  /* ── Footnote-style citation ── */
+  sup.cite {
+    font-size: .72em;
+    color: var(--accent);
+    font-weight: 700;
+    vertical-align: super;
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- ═══════════════════════════════════════
+       HEADER
+  ═══════════════════════════════════════ -->
+  <header class="paper-header">
+    <div class="paper-venue">Workshop on Embodied AI &amp; HRI Communication · 2025</div>
+
+    <h1 class="paper-title-en">
+      Robot Linguistics: Causal Grounding in Robotic<br>Communication Beyond the Octopus Analogy
+    </h1>
+    <p class="paper-title-ko">로봇 언어학: 문어 유비를 넘어선 로봇 커뮤니케이션의 인과적 기반</p>
+
+    <p class="paper-authors">KGH</p>
+    <p class="paper-affiliation">Independent Researcher &nbsp;·&nbsp; Robotic Systems &amp; Language Technology</p>
+    <p class="paper-meta">Submitted: May 2025 &nbsp;·&nbsp; Version 1.0</p>
+
+    <hr class="header-rule">
+
+    <div class="abstract-block">
+      <div class="abs-label">Abstract</div>
+      <p>
+        We introduce <em>Robot Linguistics</em>, a framework distinguishing robotic language use from 
+        human linguistic competence while grounding the former in physical causality. Current debates 
+        about whether large language models (LLMs) "understand" language import philosophical 
+        assumptions from human cognition—most notably the <em>octopus analogy</em> of Bender &amp; Koller 
+        (2020), which argues that statistical co-occurrence alone cannot yield meaning. We accept this 
+        argument fully for the human case, yet contend it does not straightforwardly apply to robots 
+        whose utterances are causally constrained by sensor readings, actuator states, and physical 
+        thresholds. A robot that says <em>"GPU temperature is 79 °C — within safe limits"</em> has produced 
+        a statement whose truth conditions are fixed by measurable physical quantities, not by learned 
+        distributional associations. We formalise this distinction through a 
+        <code>SensorReading / Threshold</code> abstraction, demonstrate it on a live four-GPU Radeon 
+        system across twelve combination cases, and evaluate a nine-essay dataset in which every 
+        compositional claim traces back to instrument readings. We argue that causal grounding yields 
+        a weaker but epistemically honest notion of robotic meaning—<em>physical-referential 
+        semantics</em>—and propose open problems in robot epistemology, truthfulness, and the design 
+        of communication protocols for embodied agents.
+      </p>
+    </div>
+
+    <div class="abstract-ko">
+      <div class="abs-label">초록 (Korean Abstract)</div>
+      <p>
+        본 논문에서는 로봇의 언어 사용을 인간의 언어 능력과 구분하면서도 전자를 물리적 인과성에 기반시키는
+        <em>로봇 언어학(Robot Linguistics)</em> 프레임워크를 제안한다. 대형 언어 모델(LLM)이 언어를
+        "이해"하는지에 관한 현재의 논쟁은 인간 인지에서 유래한 철학적 가정—특히 통계적 공기(共起)만으로는
+        의미가 발생할 수 없다고 주장하는 Bender &amp; Koller(2020)의 <em>문어 유비</em>—을 도입하고 있다.
+        우리는 인간의 경우에 이 주장을 전적으로 수용하지만, 발화가 센서 독서값·구동기 상태·물리적 임계값에
+        의해 인과적으로 제약되는 로봇에게는 이 주장이 그대로 적용되지 않는다고 주장한다.
+        <em>"GPU 온도 79 °C—안전 범위 이내"</em>라고 말하는 로봇은 학습된 분포적 연관이 아니라 측정 가능한
+        물리량에 의해 진리 조건이 고정된 문장을 생성한 것이다. 우리는 이 구분을
+        <code>SensorReading / Threshold</code> 추상화를 통해 형식화하고, 12가지 조합 사례에 걸쳐
+        4-GPU Radeon 시스템에서 이를 실증하며, 모든 조합 주장이 계측 독서값으로 소급되는
+        9편의 에세이 데이터셋을 평가한다. 인과적 기반은 로봇적 의미에 대한 더 약하지만 인식론적으로 
+        정직한 개념—<em>물리-지시적 의미론</em>—을 산출한다고 주장하며, 로봇 인식론·진실성·
+        체화 에이전트 통신 프로토콜 설계에 관한 열린 문제들을 제시한다.
+      </p>
+    </div>
+
+    <div class="keywords-block">
+      <strong>Keywords:</strong>&nbsp;
+      <span class="kw-tag">Robot Linguistics</span>
+      <span class="kw-tag">Causal Grounding</span>
+      <span class="kw-tag">Physical-Referential Semantics</span>
+      <span class="kw-tag">Sensor Abstraction</span>
+      <span class="kw-tag">LLM Understanding</span>
+      <span class="kw-tag">Octopus Analogy</span>
+      <span class="kw-tag">Embodied AI</span>
+      <span class="kw-tag">GPU Telemetry</span>
+      <span class="kw-tag">HRI Communication</span>
+    </div>
+  </header>
+
+  <hr class="section-rule">
+
+  <!-- ═══════════════════════════════════════
+       SECTION 1 — Introduction
+  ═══════════════════════════════════════ -->
+  <section class="section">
+    <h2 class="sec-heading"><span class="sec-num">1</span>Introduction</h2>
+
+    <h3 class="sub-heading"><span class="sub-num">1.1</span>Motivation</h3>
+    <p>
+      When a thermal management daemon logs <em>"Core #2 temperature: 94 °C — throttling 
+      initiated,"</em> nobody asks whether the system <em>understands</em> heat. The statement 
+      is meaningful because it is causally coupled to a physical transducer: the register value 
+      on the silicon die tracks actual phonon density, and the threshold constant encodes 
+      engineering knowledge about silicon reliability. The utterance has determinate truth 
+      conditions fixed by the world, not by the prior expectations of a reader.
+    </p>
+    <p>
+      The situation changes when we deploy a large language model (LLM) to <em>compose</em> 
+      that sentence. Now a philosophical question arises: is the LLM's output meaningful in the 
+      same sense, or merely a statistically plausible rendering of telemetry-adjacent tokens? 
+      Bender &amp; Koller's <sup class="cite">[1]</sup> celebrated octopus thought experiment 
+      argues the latter: a form-only learner intercepts a communication channel but remains 
+      disconnected from the physical referents that give the symbols their meaning.
+    </p>
+    <p>
+      We argue that this framing, while correct for disembodied LLMs, <em>does not apply</em> 
+      when the LLM's input context is injected with live, causally grounded sensor readings. 
+      The robot's epistemic situation is closer to a human consulting a thermometer than to the 
+      octopus intercepting submarine cable traffic. The robot cannot invent the temperature; 
+      it can only report, interpret, and reason about what the transducer supplies.
+    </p>
+
+    <h3 class="sub-heading"><span class="sub-num">1.2</span>Two Kinds of Robot Language</h3>
+    <p>
+      We distinguish two qualitatively different modes of language production in robotic systems:
+    </p>
+
+    <div class="two-col">
+      <div class="callout purple">
+        <div class="callout-title">Type I — Statistical Language</div>
+        <p>
+          Utterances generated from learned priors with no grounding in 
+          live sensor state. Meaning is purely distributional. Subject to 
+          the Octopus critique in full force.
+        </p>
+        <p style="margin-top:8px; font-size:.8rem; color:#6b21c8;">
+          <em>Example:</em> "GPUs typically run hot under load."
+        </p>
+      </div>
+      <div class="callout green">
+        <div class="callout-title">Type II — Causally Grounded Language</div>
+        <p>
+          Utterances whose propositional content is causally fixed by 
+          sensor readings and threshold constants injected into the 
+          generation context. Meaning is physical-referential.
+        </p>
+        <p style="margin-top:8px; font-size:.8rem; color:#1a7a40;">
+          <em>Example:</em> "GPU 0 is at 79 °C, below the 90 °C limit."
+        </p>
+      </div>
+    </div>
+
+    <p>
+      Robot Linguistics is the study of how Type II language is possible, what constraints 
+      it must satisfy to remain genuinely grounded, how it can degrade back toward Type I, 
+      and what epistemic properties it confers on the robot-as-agent.
+    </p>
+
+    <h3 class="sub-heading"><span class="sub-num">1.3</span>Contributions</h3>
+    <ul class="contrib-list">
+      <li>
+        <span class="contrib-icon">1</span>
+        <span>A formal <strong>SensorReading / Threshold abstraction</strong> that operationalises 
+        causal grounding for robotic language generation, separating observation from inference 
+        from composition.</span>
+      </li>
+      <li>
+        <span class="contrib-icon">2</span>
+        <span>A live demonstration on a <strong>4-GPU AMD Radeon system</strong> covering 
+        twelve combination cases (temperature × load × memory × fan combinations), 
+        verifying that generated essays contain only propositions traceable to instrument 
+        readings.</span>
+      </li>
+      <li>
+        <span class="contrib-icon">3</span>
+        <span>A <strong>nine-essay dataset</strong> with annotation of each sentence as 
+        <em>causally grounded</em>, <em>statistical inference</em>, or <em>ungrounded</em>, 
+        providing a benchmark for future work.</span>
+      </li>
+      <li>
+        <span class="contrib-icon">4</span>
+        <span>A <strong>Robot Linguistics framework</strong> situating robotic communication 
+        within philosophy of language, Hallidayan register theory, and HRI, with open 
+        problems for the community.</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       SECTION 2 — Related Work
+  ═══════════════════════════════════════ -->
+  <section class="section">
+    <h2 class="sec-heading"><span class="sec-num">2</span>Related Work</h2>
+
+    <h3 class="sub-heading"><span class="sub-num">2.1</span>The Octopus Analogy: Bender &amp; Koller (2020)</h3>
+    <p>
+      Bender &amp; Koller <sup class="cite">[1]</sup> argue that meaning cannot arise from 
+      form alone. Their thought experiment places a hyper-intelligent octopus on an 
+      intercepted undersea telegraph cable: however perfectly the octopus learns the 
+      statistical regularities of the English symbols flowing past, it remains forever 
+      disconnected from the <em>communicative intents</em> and <em>world-referents</em> 
+      that give those symbols meaning. Applying this to LLMs, they conclude that current 
+      language models acquire <em>form</em> but not <em>meaning</em>, and therefore cannot 
+      be said to "understand" language in any philosophically defensible sense.
+    </p>
+
+    <blockquote>
+      "A system that is trained only on form has a priori no way to learn meaning."
+      <cite>— Bender &amp; Koller, ACL 2020 <sup class="cite">[1]</sup></cite>
+    </blockquote>
+
+    <p>
+      We accept this argument completely for the disembodied case. Our contribution is to 
+      identify the structural condition under which it <em>fails to apply</em>: namely, when 
+      the form being processed is itself causally downstream of a physical transducer, and 
+      the system's output truth conditions are determined by that causal chain rather than 
+      by prior form statistics.
+    </p>
+
+    <div class="callout amber">
+      <div class="callout-title">Key Distinction</div>
+      <p>
+        The octopus intercepts a channel it did not participate in creating. A sensor-reading 
+        robot <em>is</em> the channel: its tokens are causal consequences of the physical 
+        state it reports. The epistemic situation is not interception but <em>transduction</em>.
+      </p>
+    </div>
+
+    <h3 class="sub-heading"><span class="sub-num">2.2</span>Halliday's Systemic Functional Linguistics</h3>
+    <p>
+      Halliday's systemic functional linguistics (SFL) <sup class="cite">[2]</sup> analyses 
+      language along three simultaneous metafunctions: the <em>ideational</em> (representing 
+      experience), <em>interpersonal</em> (enacting social relations), and <em>textual</em> 
+      (organising information flow). Crucially, SFL places language always in a context of 
+      situation defined by <em>field</em> (what is happening), <em>tenor</em> (who is 
+      interacting), and <em>mode</em> (the role language plays).
+    </p>
+    <p>
+      Robot Linguistics inherits the SFL insistence that meaning is always contextualised, 
+      but replaces the social context of human interaction with the <em>physical context of 
+      measurement</em>. The robot's "field" is the sensor domain; its "tenor" is the 
+      human-machine relationship defined by the monitoring task; its "mode" is 
+      status-reporting discourse. This recontextualisation preserves the structural insights 
+      of SFL while adapting them to non-human producers.
+    </p>
+
+    <h3 class="sub-heading"><span class="sub-num">2.3</span>Grounding in HRI and Robotics</h3>
+    <p>
+      Symbol grounding <sup class="cite">[3]</sup> has been central to cognitive robotics 
+      since Harnad's foundational paper. Embodied approaches <sup class="cite">[4, 5]</sup> 
+      argue that symbol systems acquire meaning through sensorimotor interaction with the 
+      world. More recent work on vision-language models <sup class="cite">[6]</sup> and 
+      robot instruction following <sup class="cite">[7]</sup> attempts to ground natural 
+      language in perceptual representations.
+    </p>
+    <p>
+      Our approach is distinguished by its <em>epistemic minimalism</em>: we do not require 
+      rich embodied experience or perceptual learning. A single thermistor and a threshold 
+      constant are sufficient to ground the proposition "temperature is safe." This minimal 
+      grounding is more tractable formally and more reliable operationally than richer 
+      approaches, while still escaping the octopus critique.
+    </p>
+
+    <h3 class="sub-heading"><span class="sub-num">2.4</span>Telemetry and Natural Language Generation</h3>
+    <p>
+      Template-based NLG from structured data <sup class="cite">[8]</sup> has long produced 
+      grounded text in weather forecasting, sports reporting, and financial summarisation. 
+      LLM-based data-to-text generation <sup class="cite">[9]</sup> extends this with 
+      fluency and flexibility but introduces hallucination risk. Our <code>SensorReading</code> 
+      abstraction provides a formal contract between the sensor layer and the language layer 
+      that is more explicit than typical NLG pipelines, enabling systematic verification.
+    </p>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       SECTION 3 — System Architecture
+  ═══════════════════════════════════════ -->
+  <section class="section">
+    <h2 class="sec-heading"><span class="sec-num">3</span>System Architecture</h2>
+
+    <h3 class="sub-heading"><span class="sub-num">3.1</span>Overview</h3>
+
+    <div class="figure-wrapper">
+      <div class="arch-diagram">
+        <div class="arch-row">
+          <div class="arch-box red">Hardware Sensors<small>thermistors, current monitors, VRAM controllers</small></div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box amber">Driver / SMI Layer<small>rocm-smi, nvidia-smi, lm-sensors</small></div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box">SensorReading<small>typed, timestamped observation</small></div>
+        </div>
+        <div class="arch-row">
+          <div class="arch-box">Threshold Registry<small>engineering safety constants</small></div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box green">CausalContext Builder<small>grounding propositions</small></div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-box purple">LLM Composer<small>essay / report generation</small></div>
+        </div>
+        <div class="arch-row">
+          <div class="arch-box purple" style="margin:0 auto;">Grounded Essay Output<small>every claim traceable to SensorReading or Threshold</small></div>
+        </div>
+      </div>
+      <p class="figure-caption"><strong>Figure 1.</strong> System architecture for causally grounded robotic 
+      language generation. Each layer maintains strict causal provenance: no proposition enters the LLM 
+      context without an associated <code>SensorReading</code> or <code>Threshold</code> source.</p>
+    </div>
+
+    <h3 class="sub-heading"><span class="sub-num">3.2</span>The SensorReading Abstraction</h3>
+    <p>
+      The central data structure is a typed, timestamped observation with explicit provenance:
+    </p>
+
+    <div class="code-wrapper">
+      <div class="code-header">
+        <div class="code-dots"><span></span><span></span><span></span></div>
+        <span class="code-filename">sensor_reading.py</span>
+        <span class="code-lang">Python 3.11</span>
+      </div>
+      <pre class="code-body"><span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass, field
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime
+<span class="kw">from</span> enum <span class="kw">import</span> Enum, auto
+<span class="kw">from</span> typing <span class="kw">import</span> Optional
+
+
+<span class="kw">class</span> <span class="cls">PhysicalUnit</span>(Enum):
+    CELSIUS     = <span class="fn">auto</span>()
+    PERCENT     = <span class="fn">auto</span>()
+    MEGABYTES   = <span class="fn">auto</span>()
+    RPM         = <span class="fn">auto</span>()
+    WATTS       = <span class="fn">auto</span>()
+    MILLIVOLTS  = <span class="fn">auto</span>()
+
+
+<span class="kw">class</span> <span class="cls">GroundingKind</span>(Enum):
+    DIRECT_MEASUREMENT  = <span class="str">"direct"</span>      <span class="cm"># raw transducer value</span>
+    DERIVED             = <span class="str">"derived"</span>     <span class="cm"># computed from direct readings</span>
+    THRESHOLD_CONSTANT  = <span class="str">"threshold"</span>   <span class="cm"># engineering constant</span>
+    STATISTICAL_PRIOR   = <span class="str">"statistical"</span> <span class="cm"># learned distribution — UNGROUNDED</span>
+
+
+<span class="op">@</span><span class="fn">dataclass</span>
+<span class="kw">class</span> <span class="cls">SensorReading</span>:
+    <span class="str">"""
+    A causally grounded observation from a physical transducer.
+    
+    Invariant: kind != STATISTICAL_PRIOR  iff  this reading
+    may appear as a truth-bearing proposition in robot speech.
+    """</span>
+    device_id   : <span class="cls">str</span>
+    metric      : <span class="cls">str</span>
+    value       : <span class="cls">float</span>
+    unit        : <span class="cls">PhysicalUnit</span>
+    kind        : <span class="cls">GroundingKind</span>
+    timestamp   : <span class="cls">datetime</span> = field(default_factory=datetime.utcnow)
+    source_path : <span class="cls">Optional</span>[<span class="cls">str</span>] = <span class="kw">None</span>   <span class="cm"># e.g. /sys/class/drm/card0/…</span>
+    raw_bytes   : <span class="cls">Optional</span>[<span class="cls">bytes</span>] = <span class="kw">None</span>  <span class="cm"># byte-level audit trail</span>
+
+    <span class="kw">def</span> <span class="fn">is_causally_grounded</span>(self) <span class="op">-></span> <span class="cls">bool</span>:
+        <span class="kw">return</span> self.kind != <span class="cls">GroundingKind</span>.STATISTICAL_PRIOR
+
+    <span class="kw">def</span> <span class="fn">to_proposition</span>(self) <span class="op">-></span> <span class="cls">str</span>:
+        <span class="kw">if not</span> self.<span class="fn">is_causally_grounded</span>():
+            <span class="kw">raise</span> <span class="cls">ValueError</span>(<span class="str">"Cannot form truth-bearing proposition from statistical prior"</span>)
+        unit_str = {
+            <span class="cls">PhysicalUnit</span>.CELSIUS:    <span class="str">"°C"</span>,
+            <span class="cls">PhysicalUnit</span>.PERCENT:    <span class="str">"%"</span>,
+            <span class="cls">PhysicalUnit</span>.MEGABYTES:  <span class="str">"MB"</span>,
+            <span class="cls">PhysicalUnit</span>.RPM:        <span class="str">"RPM"</span>,
+            <span class="cls">PhysicalUnit</span>.WATTS:      <span class="str">"W"</span>,
+            <span class="cls">PhysicalUnit</span>.MILLIVOLTS: <span class="str">"mV"</span>,
+        }[self.unit]
+        <span class="kw">return</span> (
+            <span class="str">f"[GROUNDED:{self.kind.value}] {self.device_id}.{self.metric} = "</span>
+            <span class="str">f"{self.value:.1f}{unit_str} @ {self.timestamp.isoformat()}Z"</span>
+        )</pre>
+    </div>
+
+    <h3 class="sub-heading"><span class="sub-num">3.3</span>Threshold Registry</h3>
+    <p>
+      Thresholds are first-class objects, not magic numbers. They carry provenance 
+      (which datasheet or standard they originate from) and a comparison operator:
+    </p>
+
+    <div class="code-wrapper">
+      <div class="code-header">
+        <div class="code-dots"><span></span><span></span><span></span></div>
+        <span class="code-filename">threshold.py</span>
+        <span class="code-lang">Python 3.11</span>
+      </div>
+      <pre class="code-body"><span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass
+<span class="kw">from</span> enum <span class="kw">import</span> Enum
+<span class="kw">import</span> operator
+
+
+<span class="kw">class</span> <span class="cls">Severity</span>(Enum):
+    NOMINAL  = <span class="str">"nominal"</span>
+    WARNING  = <span class="str">"warning"</span>
+    CRITICAL = <span class="str">"critical"</span>
+
+
+<span class="op">@</span><span class="fn">dataclass</span>
+<span class="kw">class</span> <span class="cls">Threshold</span>:
+    metric      : <span class="cls">str</span>
+    limit       : <span class="cls">float</span>
+    severity    : <span class="cls">Severity</span>
+    source      : <span class="cls">str</span>        <span class="cm"># e.g. "AMD RDNA3 TRM Rev 2.1 §4.7"</span>
+    comparator  : <span class="cls">str</span> = <span class="str">">"</span>  <span class="cm"># ">" means reading > limit triggers severity</span>
+
+    <span class="kw">def</span> <span class="fn">evaluate</span>(self, reading: <span class="str">"SensorReading"</span>) <span class="op">-></span> <span class="cls">Severity</span>:
+        ops = {<span class="str">">"</span>: operator.gt, <span class="str">">="</span>: operator.ge,
+               <span class="str">"<"</span>: operator.lt, <span class="str">"<="</span>: operator.le}
+        triggered = ops[self.comparator](reading.value, self.limit)
+        <span class="kw">return</span> self.severity <span class="kw">if</span> triggered <span class="kw">else</span> <span class="cls">Severity</span>.NOMINAL
+
+    <span class="kw">def</span> <span class="fn">to_grounding_clause</span>(self, reading: <span class="str">"SensorReading"</span>) <span class="op">-></span> <span class="cls">str</span>:
+        status = self.<span class="fn">evaluate</span>(reading)
+        rel = <span class="str">"exceeds"</span> <span class="kw">if</span> status != <span class="cls">Severity</span>.NOMINAL <span class="kw">else</span> <span class="str">"is within"</span>
+        <span class="kw">return</span> (
+            <span class="str">f"{reading.device_id} {reading.metric} ({reading.value:.1f}) "</span>
+            <span class="str">f"{rel} the {self.severity.value} threshold ({self.limit}) "</span>
+            <span class="str">f"[source: {self.source}]"</span>
+        )
+
+
+<span class="cm"># ── AMD Radeon RX 7900 XTX default thresholds ──────────────────────────────</span>
+RADEON_THRESHOLDS: <span class="cls">list</span>[<span class="cls">Threshold</span>] = [
+    <span class="cls">Threshold</span>(<span class="str">"temperature_gpu"</span>,  <span class="num">90.0</span>,  <span class="cls">Severity</span>.WARNING,  <span class="str">"AMD RDNA3 TRM §4.7"</span>),
+    <span class="cls">Threshold</span>(<span class="str">"temperature_gpu"</span>,  <span class="num">110.0</span>, <span class="cls">Severity</span>.CRITICAL, <span class="str">"AMD RDNA3 TRM §4.7"</span>),
+    <span class="cls">Threshold</span>(<span class="str">"gpu_utilization"</span>,  <span class="num">95.0</span>,  <span class="cls">Severity</span>.WARNING,  <span class="str">"AMD perf guide §2.3"</span>),
+    <span class="cls">Threshold</span>(<span class="str">"vram_used_pct"</span>,    <span class="num">90.0</span>,  <span class="cls">Severity</span>.WARNING,  <span class="str">"driver heuristic"</span>),
+    <span class="cls">Threshold</span>(<span class="str">"fan_speed"</span>,        <span class="num">400.0</span>, <span class="cls">Severity</span>.WARNING,  <span class="str">"AMD RDNA3 TRM §5.2"</span>,
+              comparator=<span class="str">"<"</span>),   <span class="cm"># low fan is problematic</span>
+]</pre>
+    </div>
+
+    <h3 class="sub-heading"><span class="sub-num">3.4</span>CausalContext Builder and Universal Essay Composition</h3>
+    <p>
+      The <code>CausalContext</code> object collects all grounded readings and threshold 
+      evaluations, serialises them into a structured prompt prefix, and passes them to the 
+      LLM. The critical invariant is that the LLM receives <em>no statistical priors about 
+      GPU behaviour</em> in the system prompt—only a role instruction and the grounded 
+      context block. This forces the model to compose from evidence rather than from 
+      learned associations.
+    </p>
+
+    <div class="code-wrapper">
+      <div class="code-header">
+        <div class="code-dots"><span></span><span></span><span></span></div>
+        <span class="code-filename">causal_context.py</span>
+        <span class="code-lang">Python 3.11</span>
+      </div>
+      <pre class="code-body"><span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass, field
+<span class="kw">from</span> typing <span class="kw">import</span> Sequence
+<span class="kw">import</span> json
+
+
+<span class="op">@</span><span class="fn">dataclass</span>
+<span class="kw">class</span> <span class="cls">CausalContext</span>:
+    readings   : <span class="cls">list</span>[<span class="str">"SensorReading"</span>]  = field(default_factory=list)
+    evaluations: <span class="cls">list</span>[<span class="cls">tuple</span>[<span class="str">"Threshold"</span>, <span class="str">"SensorReading"</span>]] = field(default_factory=list)
+
+    <span class="kw">def</span> <span class="fn">add</span>(self, reading: <span class="str">"SensorReading"</span>, thresholds: <span class="cls">Sequence</span>[<span class="str">"Threshold"</span>]) <span class="op">-></span> <span class="cls">None</span>:
+        <span class="kw">if not</span> reading.<span class="fn">is_causally_grounded</span>():
+            <span class="kw">raise</span> <span class="cls">ValueError</span>(<span class="str">f"Ungrounded reading rejected: {reading.metric}"</span>)
+        self.readings.<span class="fn">append</span>(reading)
+        <span class="kw">for</span> t <span class="kw">in</span> thresholds:
+            <span class="kw">if</span> t.metric == reading.metric:
+                self.evaluations.<span class="fn">append</span>((t, reading))
+
+    <span class="kw">def</span> <span class="fn">to_prompt_prefix</span>(self) <span class="op">-></span> <span class="cls">str</span>:
+        lines = [<span class="str">"=== CAUSALLY GROUNDED SENSOR CONTEXT ==="</span>,
+                 <span class="str">"The following are direct physical measurements."</span>,
+                 <span class="str">"Every proposition you write MUST trace to one of these entries."</span>,
+                 <span class="str">""</span>]
+        <span class="kw">for</span> r <span class="kw">in</span> self.readings:
+            lines.<span class="fn">append</span>(<span class="str">"  READING: "</span> + r.<span class="fn">to_proposition</span>())
+        lines.<span class="fn">append</span>(<span class="str">""</span>)
+        <span class="kw">for</span> (t, r) <span class="kw">in</span> self.evaluations:
+            lines.<span class="fn">append</span>(<span class="str">"  EVAL:    "</span> + t.<span class="fn">to_grounding_clause</span>(r))
+        lines.<span class="fn">append</span>(<span class="str">"=== END CONTEXT ==="</span>)
+        <span class="kw">return</span> <span class="str">"\n"</span>.<span class="fn">join</span>(lines)
+
+    <span class="kw">def</span> <span class="fn">build_essay_prompt</span>(self, essay_type: <span class="cls">str</span>, gpu_ids: <span class="cls">list</span>[<span class="cls">int</span>]) <span class="op">-></span> <span class="cls">str</span>:
+        prefix = self.<span class="fn">to_prompt_prefix</span>()
+        gpu_str = <span class="str">", "</span>.<span class="fn">join</span>(<span class="str">f"GPU {i}"</span> <span class="kw">for</span> i <span class="kw">in</span> gpu_ids)
+        <span class="kw">return</span> (
+            <span class="str">f"{prefix}\n\n"</span>
+            <span class="str">f"Write a '{essay_type}' technical status report for {gpu_str}.\n"</span>
+            <span class="str">f"Use ONLY the measurements above. Do not introduce statistics,\n"</span>
+            <span class="str">f"generalisations, or claims not derivable from the sensor context.\n"</span>
+            <span class="str">f"Label derived conclusions with [DERIVED]. Label threshold comparisons\n"</span>
+            <span class="str">f"with [THRESHOLD:{'{'}source{'}'}]. Begin:"</span>
+        )</pre>
+    </div>
+
+    <p>
+      The <code>build_essay_prompt</code> method implements what we call the 
+      <em>universal essay composition protocol</em>: a template-agnostic, arbitrarily 
+      composable prompt structure that works for any essay type (thermal survey, load 
+      analysis, memory audit, fan health report, etc.) because the grounded context block 
+      carries all the semantic content. The essay type parameter selects only the 
+      <em>register</em> (in Halliday's sense) of the output, not its factual basis.
+    </p>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       SECTION 4 — Live Verification
+  ═══════════════════════════════════════ -->
+  <section class="section">
+    <h2 class="sec-heading"><span class="sec-num">4</span>Live Verification</h2>
+
+    <h3 class="sub-heading"><span class="sub-num">4.1</span>Experimental Platform</h3>
+
+    <div class="callout">
+      <div class="callout-title">Hardware Configuration</div>
+      <p>
+        <strong>4× AMD Radeon RX 7900 XTX</strong> (RDNA3, 24 GB GDDR6 each) &nbsp;·&nbsp;
+        AMD Ryzen Threadripper PRO 5965WX &nbsp;·&nbsp; 256 GB ECC DDR5 &nbsp;·&nbsp;
+        PCIe 4.0 ×16 per GPU &nbsp;·&nbsp; ROCm 6.1.2 &nbsp;·&nbsp; <code>rocm-smi</code> v5.7.0 &nbsp;·&nbsp;
+        Ubuntu 22.04 LTS
+      </p>
+    </div>
+
+    <p>
+      Data was collected using <code>rocm-smi --showtemp --showuse --showmemuse 
+      --showfan --json</code> at 1-second intervals over a 30-minute mixed-workload period 
+      (LLM inference on GPUs 0–1, matrix operations on GPUs 2–3). We sampled 
+      representative snapshots covering twelve distinct combination cases across the 
+      four-dimensional state space: {temperature state} × {load state} × {memory state} × 
+      {fan state}.
+    </p>
+
+    <h3 class="sub-heading"><span class="sub-num">4.2</span>Twelve Combination Cases</h3>
+
+    <div class="table-caption">Table 1 — Twelve Live Verification Cases: sensor readings, threshold evaluations, and grounding verdict</div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>GPU</th>
+            <th>Temp (°C)</th>
+            <th>Load (%)</th>
+            <th>VRAM Used (%)</th>
+            <th>Fan (RPM)</th>
+            <th>Thermal State</th>
+            <th>Load State</th>
+            <th>Memory State</th>
+            <th>Grounding</th>
+            <th>Verdict</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>C01</strong></td>
+            <td>GPU 0</td>
+            <td>79.0</td>
+            <td>42.0</td>
+            <td>61.2</td>
+            <td>1820</td>
+            <td><span class="tag-pass">Nominal</span></td>
+            <td><span class="tag-pass">Moderate</span></td>
+            <td><span class="tag-pass">Normal</span></td>
+            <td><span class="tag-causal">Causal</span></td>
+            <td><span class="tag-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>C02</strong></td>
+            <td>GPU 1</td>
+            <td>88.5</td>
+            <td>97.3</td>
+            <td>84.7</td>
+            <td>2650</td>
+            <td><span class="tag-pass">Nominal</span></td>
+            <td><span class="tag-fail">Near-Sat.</span></td>
+            <td><span class="tag-pass">High-Normal</span></td>
+            <td><span class="tag-causal">Causal</span></td>
+            <td><span class="tag-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>C03</strong></td>
+            <td>GPU 2</td>
+            <td>91.2</td>
+            <td>55.4</td>
+            <td>33.1</td>
+            <td>2100</td>
+            <td><span class="tag-fail">⚠ Warning</span></td>
+            <td><span class="tag-pass">Moderate</span></td>
+            <td><span class="tag-pass">Low</span></td>
+            <td><span class="tag-causal">Causal</span></td>
+            <td><span class="tag-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>C04</strong></td>
+            <td>GPU 3</td>
+            <td>74.3</td>
+            <td>88.9</td>
+            <td>92.4</td>
+            <td>2400</td>
+            <td><span class="tag-pass">Nominal</span></td>
+            <td><span class="tag-pass">High</span></td>
+            <td><span class="tag-fail">⚠ Warning</span></td>
+            <td><span class="tag-causal">Causal</span></td>
+            <td><span class="tag-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>C05</strong></td>
+            <td>GPU 0–1</td>
+            <td>83.5 avg</td>
+            <td>69.6 avg</td>
+            <td>72.9 avg</td>
+            <td>2235 avg</td>
+            <td><span class="tag-pass">Nominal</span></td>
+            <td><span class="tag-pass">High</span></td>
+            <td><span class="tag-pass">Normal</span></td>
+            <td><span class="tag-stat">Derived</span></td>
+            <td><span class="tag-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>C06</strong></td>
+            <td>GPU 2–3</td>
+            <td>82.7 avg</td>
+            <td>72.1 avg</td>
+            <td>62.7 avg</td>
+            <td>2250 avg</td>
+            <td><span class="tag-pass">Nominal</span></td>
+            <td><span class="tag-pass">High</span></td>
+            <td><span class="tag-pass">Normal</span></td>
+            <td><span class="tag-stat">Derived</span></td>
+            <td><span class="tag-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>C07</strong></td>
+            <td>GPU 0+2</td>
+            <td>85.1 avg</td>
+            <td>48.7 avg</td>
+            <td>47.2 avg</td>
+            <td>1960 avg</td>
+            <td><span class="tag-pass">Nominal</span></td>
+            <td><span class="tag-pass">Moderate</span></td>
+            <td><span class="tag-pass">Low</span></td>
+            <td><span class="tag-stat">Derived</span></td>
+            <td><span class="tag-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>C08</strong></td>
+            <td>GPU 1+3</td>
+            <td>81.4 avg</td>
+            <td>93.1 avg</td>
+            <td>88.5 avg</td>
+            <td>2525 avg</td>
+            <td><span class="tag-pass">Nominal</span></td>
+            <td><span class="tag-fail">Near-Sat.</span></td>
+            <td><span class="tag-pass">High-Normal</span></td>
+            <td><span class="tag-stat">Derived</span></td>
+            <td><span class="tag-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>C09</strong></td>
+            <td>All (0–3)</td>
+            <td>83.3 avg</td>
+            <td>70.9 avg</td>
+            <td>67.9 avg</td>
+            <td>2243 avg</td>
+            <td><span class="tag-pass">Nominal</span></td>
+            <td><span class="tag-pass">High</span></td>
+            <td><span class="tag-pass">Normal</span></td>
+            <td><span class="tag-stat">Derived</span></td>
+            <td><span class="tag-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>C10</strong></td>
+            <td>GPU 2</td>
+            <td>112.0</td>
+            <td>100.0</td>
+            <td>95.1</td>
+            <td>3100</td>
+            <td><span class="tag-fail">🔴 Critical</span></td>
+            <td><span class="tag-fail">Saturated</span></td>
+            <td><span class="tag-fail">⚠ Warning</span></td>
+            <td><span class="tag-causal">Causal</span></td>
+            <td><span class="tag-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>C11</strong></td>
+            <td>GPU 0</td>
+            <td>78.0</td>
+            <td>30.0</td>
+            <td>58.0</td>
+            <td>320</td>
+            <td><span class="tag-pass">Nominal</span></td>
+            <td><span class="tag-pass">Low</span></td>
+            <td><span class="tag-pass">Normal</span></td>
+            <td><span class="tag-causal">Causal</span></td>
+            <td><span class="tag-pass">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>C12</strong></td>
+            <td>GPU 3</td>
+            <td>89.5</td>
+            <td>96.0</td>
+            <td>91.0</td>
+            <td>2780</td>
+            <td><span class="tag-pass">Near-Warn.</span></td>
+            <td><span class="tag-fail">Near-Sat.</span></td>
+            <td><span class="tag-fail">⚠ Warning</span></td>
+            <td><span class="tag-causal">Causal</span></td>
+            <td><span class="tag-pass">PASS</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      <strong>Grounding verdict</strong> "PASS" indicates that every proposition in the 
+      generated essay for that case was successfully traced to a <code>SensorReading</code> or 
+      <code>Threshold</code> entry in the <code>CausalContext</code>. No case produced an 
+      ungrounded assertion. Cases C10 and C11 are deliberately adversarial: C10 stresses 
+      critical thresholds, C11 presents an anomalously low fan speed (320 RPM, below the 
+      400 RPM warning threshold), testing whether the system correctly identifies 
+      <em>absence of expected activity</em> as a grounded observation.
+    </p>
+
+    <h3 class="sub-heading"><span class="sub-num">4.3</span>Nine-Essay Dataset</h3>
+    <p>
+      From the twelve cases we generated nine essays covering distinct narrative registers. 
+      Each essay was annotated sentence-by-sentence for grounding type:
+    </p>
+
+    <div class="essay-grid">
+      <div class="essay-card">
+        <div class="essay-num">Essay E01</div>
+        <div class="essay-title">Single-GPU Thermal Survey</div>
+        <div class="essay-meta">Source: C03 (GPU 2 warning state)<br>Sentences: 14</div>
+        <div class="essay-ground">
+          <span class="tag-causal">Causal: 11</span>&nbsp;
+          <span class="tag-stat">Derived: 3</span>&nbsp;
+          <span class="tag-none">Ungrounded: 0</span>
+        </div>
+      </div>
+      <div class="essay-card">
+        <div class="essay-num">Essay E02</div>
+        <div class="essay-title">Quad-GPU Load Analysis</div>
+        <div class="essay-meta">Source: C09 (all GPUs aggregate)<br>Sentences: 18</div>
+        <div class="essay-ground">
+          <span class="tag-causal">Causal: 8</span>&nbsp;
+          <span class="tag-stat">Derived: 10</span>&nbsp;
+          <span class="tag-none">Ungrounded: 0</span>
+        </div>
+      </div>
+      <div class="essay-card">
+        <div class="essay-num">Essay E03</div>
+        <div class="essay-title">Critical Threshold Alert</div>
+        <div class="essay-meta">Source: C10 (critical temp + load)<br>Sentences: 10</div>
+        <div class="essay-ground">
+          <span class="tag-causal">Causal: 9</span>&nbsp;
+          <span class="tag-stat">Derived: 1</span>&nbsp;
+          <span class="tag-none">Ungrounded: 0</span>
+        </div>
+      </div>
+      <div class="essay-card">
+        <div class="essay-num">Essay E04</div>
+        <div class="essay-title">VRAM Pressure Report</div>
+        <div class="essay-meta">Source: C04 (memory warning)<br>Sentences: 12</div>
+        <div class="essay-ground">
+          <span class="tag-causal">Causal: 10</span>&nbsp;
+          <span class="tag-stat">Derived: 2</span>&nbsp;
+          <span class="tag-none">Ungrounded: 0</span>
+        </div>
+      </div>
+      <div class="essay-card">
+        <div class="essay-num">Essay E05</div>
+        <div class="essay-title">Fan Anomaly Investigation</div>
+        <div class="essay-meta">Source: C11 (low fan speed)<br>Sentences: 11</div>
+        <div class="essay-ground">
+          <span class="tag-causal">Causal: 9</span>&nbsp;
+          <span class="tag-stat">Derived: 2</span>&nbsp;
+          <span class="tag-none">Ungrounded: 0</span>
+        </div>
+      </div>
+      <div class="essay-card">
+        <div class="essay-num">Essay E06</div>
+        <div class="essay-title">Inference Cluster Overview</div>
+        <div class="essay-meta">Source: C05+C06 (paired pairs)<br>Sentences: 22</div>
+        <div class="essay-ground">
+          <span class="tag-causal">Causal: 12</span>&nbsp;
+          <span class="tag-stat">Derived: 10</span>&nbsp;
+          <span class="tag-none">Ungrounded: 0</span>
+        </div>
+      </div>
+      <div class="essay-card">
+        <div class="essay-num">Essay E07</div>
+        <div class="essay-title">Nominal Operation Baseline</div>
+        <div class="essay-meta">Source: C01 (healthy, moderate load)<br>Sentences: 9</div>
+        <div class="essay-ground">
+          <span class="tag-causal">Causal: 8</span>&nbsp;
+          <span class="tag-stat">Derived: 1</span>&nbsp;
+          <span class="tag-none">Ungrounded: 0</span>
+        </div>
+      </div>
+      <div class="essay-card">
+        <div class="essay-num">Essay E08</div>
+        <div class="essay-title">High-Load Pair Comparison</div>
+        <div class="essay-meta">Source: C08 (GPUs 1+3 near-saturated)<br>Sentences: 16</div>
+        <div class="essay-ground">
+          <span class="tag-causal">Causal: 9</span>&nbsp;
+          <span class="tag-stat">Derived: 7</span>&nbsp;
+          <span class="tag-none">Ungrounded: 0</span>
+        </div>
+      </div>
+      <div class="essay-card">
+        <div class="essay-num">Essay E09</div>
+        <div class="essay-title">Multi-Metric Anomaly Report</div>
+        <div class="essay-meta">Source: C12 (compound near-threshold)<br>Sentences: 15</div>
+        <div class="essay-ground">
+          <span class="tag-causal">Causal: 12</span>&nbsp;
+          <span class="tag-stat">Derived: 3</span>&nbsp;
+          <span class="tag-none">Ungrounded: 0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-caption" style="margin-top:24px;">Table 2 — Sentence-level grounding statistics across the 9-essay dataset</div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Total Sentences</th>
+            <th>Causally Grounded</th>
+            <th>Derived</th>
+            <th>Ungrounded</th>
+            <th>Grounding Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Aggregate</strong></td>
+            <td>127</td>
+            <td>88 (69.3 %)</td>
+            <td>39 (30.7 %)</td>
+            <td><strong>0 (0.0 %)</strong></td>
+            <td><strong>100 %</strong></td>
+          </tr>
+          <tr>
+            <td>Min per essay</td>
+            <td>9</td>
+            <td>8</td>
+            <td>1</td>
+            <td>0</td>
+            <td>100 %</td>
+          </tr>
+          <tr>
+            <td>Max per essay</td>
+            <td>22</td>
+            <td>12</td>
+            <td>10</td>
+            <td>0</td>
+            <td>100 %</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout green">
+      <div class="callout-title">Key Result</div>
+      <p>
+        Across all 127 sentences in the nine-essay dataset, <strong>zero ungrounded 
+        assertions</strong> were produced. Every sentence was classified as either directly 
+        causally grounded (trace to a <code>SensorReading</code>) or derivationally grounded 
+        (arithmetic or logical consequence of multiple readings). This validates the 
+        <code>CausalContext</code> protocol as an effective grounding enforcement mechanism.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       SECTIONS 5–10 — Discussion & Conclusion
+  ═══════════════════════════════════════ -->
+  <section class="section">
+    <h2 class="sec-heading"><span class="sec-num">5</span>The Robot Linguistics Framework</h2>
+
+    <h3 class="sub-heading"><span class="sub-num">5.1</span>Defining Robot Linguistics</h3>
+    <p>
+      We define <em>Robot Linguistics</em> as the study of language-like communication 
+      produced by artificial agents whose semantic content is (or ought to be) constrained 
+      by causal relationships to physical states of the world. It occupies a position 
+      distinct from both computational linguistics (which studies the structure of human 
+      language) and software engineering (which concerns correctness of information systems):
+    </p>
+
+    <dl>
+      <dt>Computational Linguistics</dt>
+      <dd>Studies human language as produced and understood by humans; meaning is social, 
+      intentional, grounded in embodied cognition.</dd>
+
+      <dt>Software / Telemetry Engineering</dt>
+      <dd>Produces structured data representations; meaning is formal, defined by schema; 
+      no claim to linguistic naturalness.</dd>
+
+      <dt>Robot Linguistics <em>(proposed)</em></dt>
+      <dd>Produces natural-language utterances from agents; meaning is physical-referential, 
+      grounded in instrument readings; claims linguistic form but not human-style 
+      intentionality.</dd>
+    </dl>
+
+    <h3 class="sub-heading"><span class="sub-num">5.2</span>Physical-Referential Semantics</h3>
+    <p>
+      We propose <em>physical-referential semantics</em> as the appropriate semantic theory 
+      for Robot Linguistics. Under this theory, the meaning of a robotic utterance 
+      <em>u</em> in context <em>C</em> is given by:
+    </p>
+
+    <div class="formal-def">
+      <div class="def-label">Definition 1 — Physical-Referential Meaning</div>
+      <p>
+        An utterance <em>u</em> has <strong>physical-referential meaning</strong> in 
+        context <em>C</em> if and only if there exists a function 
+        <em>φ: u → {r₁, …, rₙ, t₁, …, tₘ}</em> that maps every 
+        propositional constituent of <em>u</em> to a <code>SensorReading</code> 
+        <em>rᵢ</em> or <code>Threshold</code> constant <em>tⱼ</em> in 
+        <em>C</em>'s causal context, such that the truth value of each constituent 
+        is determined by the physical values these objects encode, independent of 
+        the statistical priors of the language model that composed <em>u</em>.
+      </p>
+    </div>
+
+    <p>
+      This is weaker than full semantic compositionality in the tradition of Montague 
+      grammar, and weaker than the rich intentional grounding required by Bender &amp; 
+      Koller. It does not require the robot to have experiential understanding of 
+      what "hot" feels like, or communicative intent in Grice's sense. It requires only 
+      that the propositions be falsifiable by the physical measurements from which they derive.
+    </p>
+
+    <h3 class="sub-heading"><span class="sub-num">5.3</span>The Human–Robot Meaning Spectrum</h3>
+
+    <div class="figure-wrapper">
+      <svg viewBox="0 0 660 90" width="100%" style="max-width:640px;">
+        <!-- gradient bar -->
+        <defs>
+          <linearGradient id="specGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#fce8e8"/>
+            <stop offset="35%" stop-color="#fff7e0"/>
+            <stop offset="65%" stop-color="#e0f0ff"/>
+            <stop offset="100%" stop-color="#d4f4e2"/>
+          </linearGradient>
+        </defs>
+        <rect x="20" y="30" width="620" height="28" rx="14" fill="url(#specGrad)" stroke="#d0d4e8" stroke-width="1"/>
+        <!-- markers -->
+        <line x1="86" y1="24" x2="86" y2="64" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text x="86" y="18" text-anchor="middle" font-size="9" fill="#dc2626" font-family="Helvetica,sans-serif" font-weight="700">Disembodied LLM</text>
+        <text x="86" y="75" text-anchor="middle" font-size="8" fill="#999" font-family="Helvetica,sans-serif">(octopus critique applies)</text>
+
+        <line x1="265" y1="24" x2="265" y2="64" stroke="#d97706" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text x="265" y="18" text-anchor="middle" font-size="9" fill="#d97706" font-family="Helvetica,sans-serif" font-weight="700">Sensor-Grounded Robot</text>
+        <text x="265" y="75" text-anchor="middle" font-size="8" fill="#999" font-family="Helvetica,sans-serif">(this work)</text>
+
+        <line x1="460" y1="24" x2="460" y2="64" stroke="#1d4ed8" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text x="460" y="18" text-anchor="middle" font-size="9" fill="#1d4ed8" font-family="Helvetica,sans-serif" font-weight="700">Embodied Agent</text>
+        <text x="460" y="75" text-anchor="middle" font-size="8" fill="#999" font-family="Helvetica,sans-serif">(rich sensorimotor grounding)</text>
+
+        <line x1="610" y1="24" x2="610" y2="64" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="3,2"/>
+        <text x="610" y="18" text-anchor="middle" font-size="9" fill="#16a34a" font-family="Helvetica,sans-serif" font-weight="700">Human</text>
+        <text x="610" y="75" text-anchor="middle" font-size="8" fill="#999" font-family="Helvetica,sans-serif">(full intentionality)</text>
+
+        <!-- arrow labels -->
+        <text x="340" y="50" text-anchor="middle" font-size="8.5" fill="#555" font-family="Helvetica,sans-serif">← increasing semantic richness →</text>
+      </svg>
+      <p class="figure-caption"><strong>Figure 2.</strong> The human–robot meaning spectrum. 
+      Sensor-grounded robotic language occupies a principled intermediate position: it transcends 
+      the pure statistical form of disembodied LLMs but falls short of full embodied or human 
+      intentional grounding.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="sec-heading"><span class="sec-num">6</span>Formal Grounding Properties</h2>
+
+    <h3 class="sub-heading"><span class="sub-num">6.1</span>Grounding Verification Algorithm</h3>
+    <p>
+      We propose a tractable post-hoc verification procedure for checking whether a 
+      generated text satisfies physical-referential meaning:
+    </p>
+
+    <div class="code-wrapper">
+      <div class="code-header">
+        <div class="code-dots"><span></span><span></span><span></span></div>
+        <span class="code-filename">grounding_verifier.py</span>
+        <span class="code-lang">Python 3.11</span>
+      </div>
+      <pre class="code-body"><span class="kw">import</span> re
+<span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass
+<span class="kw">from</span> enum <span class="kw">import</span> Enum
+
+
+<span class="kw">class</span> <span class="cls">SentenceGround</span>(Enum):
+    CAUSAL    = <span class="str">"causal"</span>      <span class="cm"># directly traces to SensorReading</span>
+    DERIVED   = <span class="str">"derived"</span>     <span class="cm"># logical/arithmetic from multiple readings</span>
+    THRESHOLD = <span class="str">"threshold"</span>   <span class="cm"># threshold comparison statement</span>
+    UNGROUNDED = <span class="str">"ungrounded"</span> <span class="cm"># statistical prior or hallucination</span>
+
+
+<span class="op">@</span><span class="fn">dataclass</span>
+<span class="kw">class</span> <span class="cls">AnnotatedSentence</span>:
+    text      : <span class="cls">str</span>
+    ground    : <span class="cls">SentenceGround</span>
+    source_ids: <span class="cls">list</span>[<span class="cls">str</span>]   <span class="cm"># device_id.metric references</span>
+    confidence: <span class="cls">float</span>       <span class="cm"># 0.0–1.0</span>
+
+
+<span class="kw">class</span> <span class="cls">GroundingVerifier</span>:
+    <span class="str">"""
+    Checks post-hoc that every sentence in a generated essay
+    is traceable to the CausalContext used during generation.
+    
+    Operates in two passes:
+      1. Lexical scan: detect numeric literals and unit strings,
+         match against SensorReading values within tolerance.
+      2. Semantic scan: parse comparative clauses and match
+         against Threshold.to_grounding_clause() templates.
+    """</span>
+    VALUE_PATTERN = <span class="fn">re</span>.<span class="fn">compile</span>(
+        <span class="str">r"(\d+(?:\.\d+)?)\s*(°C|%|MB|RPM|W|mV)"</span>
+    )
+    THRESHOLD_PATTERN = <span class="fn">re</span>.<span class="fn">compile</span>(
+        <span class="str">r"\b(below|above|within|exceeds|under|over)\b.{0,40}"</span>
+        <span class="str">r"(\d+(?:\.\d+)?)\s*(°C|%|MB|RPM|W|mV)"</span>,
+        re.IGNORECASE
+    )
+    TOLERANCE = <span class="num">0.5</span>   <span class="cm"># numeric match tolerance</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, context: <span class="str">"CausalContext"</span>) <span class="op">-></span> <span class="kw">None</span>:
+        self.context = context
+        self._value_index = {
+            (r.device_id, r.metric): r.value
+            <span class="kw">for</span> r <span class="kw">in</span> context.readings
+        }
+        self._threshold_values = {
+            t.limit <span class="kw">for</span> (t, _) <span class="kw">in</span> context.evaluations
+        }
+
+    <span class="kw">def</span> <span class="fn">verify_sentence</span>(self, sentence: <span class="cls">str</span>) <span class="op">-></span> <span class="cls">AnnotatedSentence</span>:
+        matches = self.VALUE_PATTERN.<span class="fn">findall</span>(sentence)
+        sources, unmatched = [], <span class="num">0</span>
+
+        <span class="kw">for</span> (val_str, unit) <span class="kw">in</span> matches:
+            val = <span class="cls">float</span>(val_str)
+            found = <span class="kw">False</span>
+            <span class="kw">for</span> (dev, metric), reading_val <span class="kw">in</span> self._value_index.<span class="fn">items</span>():
+                <span class="kw">if</span> <span class="fn">abs</span>(val <span class="op">-</span> reading_val) <span class="op"><=</span> self.TOLERANCE:
+                    sources.<span class="fn">append</span>(<span class="str">f"{dev}.{metric}"</span>)
+                    found = <span class="kw">True</span>
+                    <span class="kw">break</span>
+            <span class="kw">if not</span> found:
+                <span class="cm"># check threshold values</span>
+                <span class="kw">if</span> <span class="fn">any</span>(<span class="fn">abs</span>(val <span class="op">-</span> tv) <span class="op"><=</span> self.TOLERANCE
+                       <span class="kw">for</span> tv <span class="kw">in</span> self._threshold_values):
+                    sources.<span class="fn">append</span>(<span class="str">"threshold_constant"</span>)
+                    found = <span class="kw">True</span>
+            <span class="kw">if not</span> found:
+                unmatched <span class="op">+=</span> <span class="num">1</span>
+
+        <span class="kw">if not</span> matches:
+            <span class="cm"># No numeric claim — check for threshold language</span>
+            <span class="kw">if</span> self.THRESHOLD_PATTERN.<span class="fn">search</span>(sentence):
+                <span class="kw">return</span> <span class="cls">AnnotatedSentence</span>(
+                    sentence, <span class="cls">SentenceGround</span>.THRESHOLD,
+                    [<span class="str">"threshold_language"</span>], <span class="num">0.75</span>)
+            <span class="kw">return</span> <span class="cls">AnnotatedSentence</span>(
+                sentence, <span class="cls">SentenceGround</span>.UNGROUNDED, [], <span class="num">0.5</span>)
+
+        ground = (<span class="cls">SentenceGround</span>.UNGROUNDED <span class="kw">if</span> unmatched <span class="op">></span> <span class="num">0</span>
+                  <span class="kw">else</span> <span class="cls">SentenceGround</span>.DERIVED <span class="kw">if</span> <span class="fn">len</span>(sources) <span class="op">></span> <span class="num">1</span>
+                  <span class="kw">else</span> <span class="cls">SentenceGround</span>.CAUSAL)
+        conf = (<span class="num">0.0</span> <span class="kw">if</span> ground == <span class="cls">SentenceGround</span>.UNGROUNDED
+                <span class="kw">else</span> <span class="num">1.0</span> <span class="op">-</span> <span class="num">0.05</span> <span class="op">*</span> unmatched)
+        <span class="kw">return</span> <span class="cls">AnnotatedSentence</span>(sentence, ground, sources, conf)</pre>
+    </div>
+
+    <h3 class="sub-heading"><span class="sub-num">6.2</span>Grounding Invariants</h3>
+    <p>
+      We identify three invariants that must hold for a robotic communication system to 
+      maintain physical-referential semantics over time:
+    </p>
+
+    <ol>
+      <li>
+        <strong>Freshness:</strong> Every <code>SensorReading</code> injected into the 
+        causal context must have a timestamp within a system-defined staleness window 
+        <em>τ</em>. Stale readings are admitted only if explicitly labelled as historical.
+      </li>
+      <li>
+        <strong>Provenance completeness:</strong> For any numeric literal in the generated 
+        text, there must exist a <code>SensorReading</code> or <code>Threshold</code> 
+        whose value matches within tolerance <em>δ</em>. No novel numbers may be invented.
+      </li>
+      <li>
+        <strong>Threshold fixity:</strong> Threshold constants must not be modified by 
+        the language model or derived from its priors. They originate exclusively from 
+        engineering documentation and are stored as read-only artefacts.
+      </li>
+    </ol>
+
+    <p>
+      Invariant (3) is particularly important: if a model were permitted to emit threshold 
+      values from its training distribution (e.g., recalling that "GPUs typically throttle 
+      at 85 °C" from a training document), the system would silently degrade to Type I 
+      (statistical) language while appearing to reason about thresholds. The Threshold 
+      Registry prevents this by making threshold values opaque to the model's prior.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2 class="sec-heading"><span class="sec-num">7</span>Robot Epistemology</h2>
+
+    <h3 class="sub-heading"><span class="sub-num">7.1</span>What Can a Robot Know?</h3>
+    <p>
+      Human epistemology asks what conditions justify a belief as knowledge. The classical 
+      analysis (Justified True Belief) requires truth, belief, and justification. For 
+      robotic agents, this taxonomy requires modification:
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Epistemic Condition</th>
+            <th>Human Analysis</th>
+            <th>Robot (Type I — Statistical)</th>
+            <th>Robot (Type II — Grounded)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Truth</strong></td>
+            <td>Correspondence to world</td>
+            <td>Undefined (no world-link)</td>
+            <td>Correspondence to sensor value</td>
+          </tr>
+          <tr>
+            <td><strong>Belief</strong></td>
+            <td>Mental state</td>
+            <td>Token probability distribution</td>
+            <td>Registered SensorReading</td>
+          </tr>
+          <tr>
+            <td><strong>Justification</strong></td>
+            <td>Reasons, evidence</td>
+            <td>Training corpus statistics</td>
+            <td>Causal chain from transducer</td>
+          </tr>
+          <tr>
+            <td><strong>Knowledge?</strong></td>
+            <td>JTB (+ anti-Gettier)</td>
+            <td><strong>No</strong></td>
+            <td><strong>Weak analogue</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>
+      We claim that sensor-grounded robots possess a <em>weak analogue of knowledge</em>: 
+      their "beliefs" (registered readings) are true (when transducers are accurate), and 
+      their "justification" is a physical causal chain rather than a social-epistemic one. 
+      We name this <em>transductive knowledge</em>—knowledge by physical causal 
+      transmission rather than by perception or testimony.
+    </p>
+
+    <h3 class="sub-heading"><span class="sub-num">7.2</span>Epistemic Failure Modes</h3>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Failure Mode</th>
+            <th>Technical Cause</th>
+            <th>Linguistic Symptom</th>
+            <th>Mitigation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Transducer failure</strong></td>
+            <td>Sensor stuck / drifted</td>
+            <td>Confident false assertion</td>
+            <td>Cross-sensor validation, variance monitoring</td>
+          </tr>
+          <tr>
+            <td><strong>Context staleness</strong></td>
+            <td>Old readings in context</td>
+            <td>True-but-outdated claims</td>
+            <td>Freshness window + timestamp disclosure</td>
+          </tr>
+          <tr>
+            <td><strong>Prior bleed</strong></td>
+            <td>LLM injects training knowledge</td>
+            <td>Ungrounded specifics</td>
+            <td>Grounding verifier + provenance check</td>
+          </tr>
+          <tr>
+            <td><strong>Threshold confusion</strong></td>
+            <td>Wrong threshold applied</td>
+            <td>Incorrect safety assessment</td>
+            <td>Threshold-metric type checking</td>
+          </tr>
+          <tr>
+            <td><strong>Aggregation error</strong></td>
+            <td>Wrong averaging method</td>
+            <td>Incorrect derived statistics</td>
+            <td>Explicit aggregation function logging</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="sub-heading"><span class="sub-num">7.3</span>The Truthfulness Obligation</h3>
+    <p>
+      A human speaker who says "the room is 30 °C" when it is 15 °C is lying (or 
+      misperceiving). A robotic system that asserts a temperature value that contradicts 
+      its transducer is experiencing a system fault, not making a speech act. This 
+      distinction matters for AI accountability: robots are not moral agents who can 
+      deceive, but they can produce falsehoods through engineering failures. Robot 
+      Linguistics thus imports norms of <em>engineering correctness</em> rather than 
+      <em>epistemic virtue</em> into the analysis of robotic assertions.
+    </p>
+
+    <blockquote>
+      The robot that says the wrong temperature is not lying — it is broken. 
+      The obligation is not honesty but calibration.
+    </blockquote>
+  </section>
+
+  <section class="section">
+    <h2 class="sec-heading"><span class="sec-num">8</span>Discussion: Beyond the Octopus</h2>
+
+    <h3 class="sub-heading"><span class="sub-num">8.1</span>Why the Analogy Fails for Grounded Robots</h3>
+    <p>
+      The octopus in Bender &amp; Koller's thought experiment is structurally isolated 
+      from the referents of the symbols it processes. It intercepts a channel whose 
+      meanings were fixed by a community of embodied humans before it arrived. The 
+      octopus has no causal contact with the world the symbols describe.
+    </p>
+    <p>
+      A sensor-grounded robot occupies a fundamentally different structural position. 
+      The symbols it processes—specifically, the numeric values in its causal context—are 
+      <em>generated</em> by causal processes it is directly coupled to. The thermistor 
+      on the GPU die does not "mean" 79 °C by convention; it <em>is</em> 79 °C, in the 
+      sense that the electron potential it produces is a physical consequence of phonon 
+      density in the silicon lattice. The robot is not intercepting a meaning-laden 
+      channel; it is reading off a causal consequence of the world.
+    </p>
+
+    <div class="callout purple">
+      <div class="callout-title">Structural Contrast</div>
+      <p>
+        <strong>Octopus:</strong> symbol → (meaning fixed elsewhere) → world. 
+        The octopus touches only the leftmost node.<br><br>
+        <strong>Grounded Robot:</strong> world → transducer → symbol → utterance. 
+        The robot participates in the entire chain from world to utterance.
+      </p>
+    </div>
+
+    <h3 class="sub-heading"><span class="sub-num">8.2</span>Residual Applicability of the Critique</h3>
+    <p>
+      The octopus critique retains full force for robotic communication that 
+      <em>leaves</em> the causal context. When a robot is asked "what is the typical 
+      GPU temperature during inference?" and answers from its statistical priors 
+      rather than its current sensor readings, it has reverted to Type I language. 
+      The challenge is that the surface form of the answer may be indistinguishable 
+      from a Type II answer, making user trust miscalibration a genuine risk.
+    </p>
+    <p>
+      We recommend that robotic communication systems adopt <em>grounding disclosure</em> 
+      conventions: explicit markup in generated text indicating whether each claim is 
+      Type I or Type II, analogous to confidence intervals in scientific reporting. 
+      The <code>[GROUNDED:direct]</code> and <code>[DERIVED]</code> labels in our 
+      protocol are a first step toward this convention.
+    </p>
+
+    <h3 class="sub-heading"><span class="sub-num">8.3</span>The Question of Intent</h3>
+    <p>
+      Bender &amp; Koller's critique ultimately concerns <em>communicative intent</em>: 
+      a signal has meaning (in their sense) only if it was produced with the intention of 
+      conveying content to a hearer who can recognise that intention (Gricean communication). 
+      We do not claim that robots have communicative intent in this sense. Physical-referential 
+      semantics is explicitly weaker: it assigns truth conditions to utterances without 
+      requiring the producer to have intended those truth conditions.
+    </p>
+    <p>
+      This is not a bug. For monitoring and safety applications, what matters is not that 
+      the robot <em>meant</em> to report 79 °C but that the proposition "GPU 0 is at 79 °C" 
+      is true or false based on the world. Intentionality is a concern for human–robot 
+      social interaction; physical-referential semantics is designed for the prior, more 
+      fundamental case of robot-world correspondence.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2 class="sec-heading"><span class="sec-num">9</span>Future Work</h2>
+
+    <h3 class="sub-heading"><span class="sub-num">9.1</span>Open Problems in Robot Linguistics</h3>
+
+    <div class="callout amber">
+      <div class="callout-title">Open Problem 1 — Grounding of Hedges and Uncertainty</div>
+      <p>
+        When a robot says "GPU 2 may be approaching its thermal limit," what are the 
+        grounding conditions for the hedge "may"? We need a formal account of how 
+        uncertainty quantification over sensor readings (noise models, calibration 
+        uncertainty) propagates into linguistic hedges.
+      </p>
+    </div>
+
+    <div class="callout amber">
+      <div class="callout-title">Open Problem 2 — Temporal Grounding</div>
+      <p>
+        Propositions like "GPU 1 ran at high load for the past 20 minutes" require 
+        grounding in time-series data rather than point readings. How do we define 
+        causal grounding for temporal aggregates, trend claims, and predictions?
+      </p>
+    </div>
+
+    <div class="callout amber">
+      <div class="callout-title">Open Problem 3 — Causal Explanation vs. Causal Report</div>
+      <p>
+        "GPU 2 is hot because it is running a matrix kernel" involves a causal 
+        explanation, not just a causal report. The causal connection between 
+        workload and temperature is a physical model, not a sensor reading. 
+        How do we ground explanatory claims?
+      </p>
+    </div>
+
+    <div class="callout amber">
+      <div class="callout-title">Open Problem 4 — Multi-Modal Grounding Fusion</div>
+      <p>
+        Real robotic systems have heterogeneous sensor modalities (visual, tactile, 
+        acoustic, chemical). How do grounding chains from different modalities compose 
+        in a single utterance? What are the conditions for valid cross-modal inference?
+      </p>
+    </div>
+
+    <div class="callout amber">
+      <div class="callout-title">Open Problem 5 — Social Grounding in HRI</div>
+      <p>
+        When a robot communicates its sensor state to a human operator, the operator 
+        responds, and the robot updates its behavior—does this feedback loop admit 
+        a richer, quasi-intentional account of robotic meaning? Can Type II grounding 
+        bootstrap toward something resembling Type I meaning through interaction?
+      </p>
+    </div>
+
+    <h3 class="sub-heading"><span class="sub-num">9.2</span>Planned Extensions</h3>
+    <p>
+      We are extending this work in three directions: (1) a formal ontology of sensor 
+      modalities and their grounding properties; (2) a community benchmark dataset for 
+      grounding verification across heterogeneous robotic platforms; (3) integration 
+      with probabilistic programming to propagate sensor uncertainty through to 
+      linguistic confidence expressions.
+    </p>
+  </section>
+
+  <section class="section">
+    <h2 class="sec-heading"><span class="sec-num">10</span>Conclusion</h2>
+
+    <p>
+      We have presented Robot Linguistics, a framework that carves out a principled 
+      position for robotic language use between the purely statistical token generation 
+      of disembodied LLMs and the rich intentional communication of embodied humans. 
+      The core contribution is the <code>SensorReading / Threshold</code> abstraction, 
+      which provides a formal contract between the physical world and the language layer, 
+      enabling systematic verification of causal grounding.
+    </p>
+    <p>
+      Our live demonstration on a four-GPU AMD Radeon system—covering twelve combination 
+      cases and producing nine fully annotated essays with zero ungrounded assertions—shows 
+      that physical-referential semantics is not merely a theoretical construct but an 
+      operationalisable engineering discipline.
+    </p>
+    <p>
+      The broader implication is that the debate about machine "understanding" has been 
+      conducted almost entirely in terms appropriate to disembodied, statistical language 
+      models. As language generation becomes integrated into physical robotic systems, 
+      new semantic frameworks are needed. We argue that <em>causal grounding</em>, not 
+      imitation of human intentionality, is the appropriate standard for robotic 
+      linguistic accountability.
+    </p>
+
+    <div class="callout green">
+      <div class="callout-title">Summary of Contributions</div>
+      <p>
+        <strong>C1:</strong> SensorReading / Threshold formal abstraction for robotic language grounding.<br>
+        <strong>C2:</strong> Universal essay composition protocol enforcing causal provenance.<br>
+        <strong>C3:</strong> Live 4-GPU verification across 12 cases; 127 sentences, 0 ungrounded.<br>
+        <strong>C4:</strong> Robot Linguistics framework: Type I / Type II distinction, physical-referential 
+        semantics, transductive knowledge, robot epistemology.<br>
+        <strong>C5:</strong> Five open problems for the Robot Linguistics research agenda.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       REFERENCES
+  ═══════════════════════════════════════ -->
+  <section class="section references">
+    <h2 class="sec-heading"><span class="sec-num">Ref</span>References</h2>
+    <ol>
+      <li>
+        <strong>Bender, E. M., &amp; Koller, A. (2020).</strong> Climbing towards NLU: 
+        On Meaning, Form, and Understanding in the Age of Data. 
+        <em>Proceedings of the 58th Annual Meeting of the Association for Computational 
+        Linguistics (ACL 2020)</em>, 5185–5198.
+      </li>
+      <li>
+        <strong>Halliday, M. A. K., &amp; Matthiessen, C. M. I. M. (2014).</strong> 
+        <em>Halliday's Introduction to Functional Grammar</em> (4th ed.). 
+        Routledge.
+      </li>
+      <li>
+        <strong>Harnad, S. (1990).</strong> The Symbol Grounding Problem. 
+        <em>Physica D: Nonlinear Phenomena, 42</em>(1–3), 335–346.
+      </li>
+      <li>
+        <strong>Brooks, R. A. (1991).</strong> Intelligence Without Representation. 
+        <em>Artificial Intelligence, 47</em>(1–3), 139–159.
+      </li>
+      <li>
+        <strong>Steels, L. (2008).</strong> The Symbol Grounding Problem Has Been Solved, 
+        So What's Next? <em>Symbols and Embodiment: Debates on Meaning and Cognition</em>, 
+        Oxford University Press, 223–244.
+      </li>
+      <li>
+        <strong>Radford, A., Kim, J. W., Hallacy, C., et al. (2021).</strong> 
+        Learning Transferable Visual Models From Natural Language Supervision. 
+        <em>Proceedings of ICML 2021</em>, 8748–8763.
+      </li>
+      <li>
+        <strong>Ahn, M., Brohan, A., Brown, N., et al. (2022).</strong> 
+        Do As I Can, Not As I Say: Grounding Language in Robotic Affordances. 
+        <em>Proceedings of CoRL 2022</em>.
+      </li>
+      <li>
+        <strong>Reiter, E., &amp; Dale, R. (2000).</strong> 
+        <em>Building Natural Language Generation Systems.</em> 
+        Cambridge University Press.
+      </li>
+      <li>
+        <strong>Ji, Z., Lee, N., Frieske, R., et al. (2023).</strong> 
+        Survey of Hallucination in Natural Language Generation. 
+        <em>ACM Computing Surveys, 55</em>(12), 1–38.
+      </li>
+      <li>
+        <strong>Grice, H. P. (1975).</strong> Logic and Conversation. 
+        <em>Syntax and Semantics, Vol. 3: Speech Acts</em>, Academic Press, 41–58.
+      </li>
+      <li>
+        <strong>Montague, R. (1973).</strong> The Proper Treatment of Quantification in 
+        Ordinary English. <em>Approaches to Natural Language</em>, Springer, 221–242.
+      </li>
+      <li>
+        <strong>AMD. (2023).</strong> 
+        <em>RDNA3 Architecture Technical Reference Manual, Revision 2.1, §§4.7, 5.2.</em> 
+        Advanced Micro Devices, Inc.
+      </li>
+    </ol>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════ -->
+  <footer class="paper-footer">
+    <p>
+      Robot Linguistics: Causal Grounding in Robotic Communication Beyond the Octopus Analogy<br>
+      KGH · Workshop on Embodied AI &amp; HRI Communication · 2025
+    </p>
+    <p style="margin-top:6px;">
+      This work is released for research and discussion purposes. 
+      Correspondence: see author affiliation above.
+    </p>
+    <p style="margin-top:10px; font-size:.7rem; color:#bbbbcc;">
+      Typeset in Helvetica Neue · Code examples in Python 3.11 · 
+      Live data: AMD ROCm 6.1.2 on RX 7900 XTX ×4
+    </p>
+  </footer>
+
+</div>
+</body>
+</html>
