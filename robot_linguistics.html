@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Robot Linguistics: Causal Grounding Research</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", sans-serif;
+      background: linear-gradient(135deg, #1e1e2e 0%, #2a2a3e 100%);
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    .header {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      padding: 40px;
+      border-radius: 16px;
+      margin-bottom: 30px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .header h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
+      color: white;
+    }
+    .header .subtitle {
+      font-size: 16px;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 20px;
+    }
+    .header .quote {
+      background: rgba(0,0,0,0.2);
+      border-left: 4px solid #fbbf24;
+      padding: 12px 20px;
+      font-style: italic;
+      color: rgba(255,255,255,0.9);
+      border-radius: 4px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+    }
+    .stat-card .label {
+      font-size: 12px;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .stat-card .value {
+      font-size: 32px;
+      font-weight: bold;
+      color: white;
+    }
+    .stat-card .sub {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+
+    .domain-section {
+      margin-bottom: 40px;
+    }
+    .domain-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding: 12px 20px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      border-left: 6px solid;
+    }
+    .domain-header h2 {
+      color: white;
+      font-size: 24px;
+    }
+    .domain-header .count {
+      background: rgba(255,255,255,0.1);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      color: #9ca3af;
+    }
+
+    .essay-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      margin-bottom: 24px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+    .card-header {
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .card-header > div:first-child {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .domain-badge {
+      color: white;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .id-badge {
+      background: rgba(255,255,255,0.1);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #9ca3af;
+      font-family: monospace;
+    }
+    .action-badge {
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .action-yes { background: #ef4444; color: white; }
+    .action-no  { background: #10b981; color: white; }
+
+    .scenario-info {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      font-family: monospace;
+    }
+    .value-big {
+      font-size: 24px;
+      font-weight: bold;
+      color: #fbbf24;
+    }
+    .comparison { color: #9ca3af; }
+    .threshold { color: #9ca3af; }
+    .trend-badge {
+      background: rgba(139, 92, 246, 0.2);
+      color: #c4b5fd;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+
+    .card-body { padding: 20px; }
+    .section {
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .section h3 {
+      font-size: 15px;
+      color: #9ca3af;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    .essay-text {
+      background: rgba(0,0,0,0.3);
+      padding: 16px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+      font-size: 14px;
+      color: #d1d5db;
+      border-left: 3px solid #6366f1;
+    }
+    .robot-lang {
+      background: rgba(16, 185, 129, 0.1);
+      padding: 12px 16px;
+      border-radius: 8px;
+      border-left: 3px solid #10b981;
+    }
+    .robot-lang code {
+      color: #6ee7b7;
+      font-size: 14px;
+      word-break: break-all;
+    }
+    .legend {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .legend span { margin-right: 12px; }
+
+    .llm-block {
+      background: rgba(0,0,0,0.2);
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .llm-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .llm-name {
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .llm-score {
+      color: white;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .llm-output {
+      color: #d1d5db;
+      font-size: 13px;
+      font-style: italic;
+      line-height: 1.5;
+    }
+    .hallu {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #fca5a5;
+    }
+
+    .chain-container {
+      background: rgba(0,0,0,0.3);
+      padding: 12px;
+      border-radius: 8px;
+    }
+    .chain-step {
+      padding: 8px 12px;
+      margin-bottom: 4px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+    .chain-sensor    { background: rgba(99, 102, 241, 0.15); color: #c7d2fe; }
+    .chain-llm       { background: rgba(139, 92, 246, 0.15); color: #ddd6fe; }
+    .chain-actuator  { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; }
+    .chain-step:last-child { margin-bottom: 0; }
+
+    .footer {
+      text-align: center;
+      padding: 30px;
+      color: #6b7280;
+      font-size: 13px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🤖 Robot Linguistics</h1>
+      <div class="subtitle">Causal Grounding in Robotic Communication — Beyond the Octopus Analogy</div>
+      <div class="quote">
+        "로봇의 발화는 인간의 철학적 의미가 아닌 인과적 그라운딩으로 충분하다.
+        센서 → 발화 → 행동의 일관된 사이클이 그 자체로 그라운딩이다."
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="label">총 Essay</div>
+        <div class="value">16</div>
+        <div class="sub">4 도메인 × 4 시나리오</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Action 발화</div>
+        <div class="value">12</div>
+        <div class="sub">/ 16 (75%)</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Qwen2.5-32B</div>
+        <div class="value" style="color: #7c3aed;">66%</div>
+        <div class="sub">평균 그라운딩 · 환각 40개</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Llama 3.3-70B</div>
+        <div class="value" style="color: #0891b2;">83%</div>
+        <div class="sub">평균 그라운딩 · 환각 32개</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">GPT-4</div>
+        <div class="value" style="color: #059669;">66%</div>
+        <div class="sub">평균 그라운딩 · 환각 24개</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <b>Robot Linguistics Research Demo</b><br>
+      Causal Grounding Framework · 16 essays across 4 sensor domains<br>
+      Deterministic external function bypasses LLM distribution-mocking · Live-verified
+    </div>
+
+    <div class="domain-section">
+      <div class="domain-header" style="border-left-color: #ff6b6b;">
+        <h2>📡 GPU Thermal</h2>
+        <span class="count">4 essays</span>
+      </div>
+    
+    <div class="essay-card" id="card-gpu_1">
+      <div class="card-header" style="background: linear-gradient(135deg, #ff6b6b22, #ff6b6b11); border-left: 6px solid #ff6b6b;">
+        <div>
+          <span class="domain-badge" style="background: #ff6b6b;">GPU Thermal</span>
+          <span class="id-badge">gpu_1</span>
+          <span class="action-badge action-no">STABLE</span>
+        </div>
+        <div class="scenario-info">
+          <span class="value-big">35</span>
+          <span class="comparison">>=</span>
+          <span class="threshold">40</span>
+          <span class="trend-badge">stable</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="section">
+          <h3>📄 1. 결정적 Essay (라이브 검증)</h3>
+          <div class="essay-text">This report describes the GPU Thermal sensor state. The system continuously monitors the physical state to determine whether intervention is required.
+
+The measurement shows that the gpu is 35. The gpu of 35 is below the threshold of 40.
+
+In conclusion, the system observed stable operation. The monitoring continues.</div>
+        </div>
+
+        <div class="section">
+          <h3>🤖 2. Robot Language (로봇어)</h3>
+          <div class="robot-lang"><code>[NOUN:gpu.value] [ADJ:35] [VERB:&gt;=] [NOUN:threshold] [ADJ:40] [ADJ:stable] [ADJ:STABLE]</code></div>
+          <div class="legend">
+            <span><b>NOUN</b>=물리량</span> · <span><b>VERB</b>=행동/비교</span> · <span><b>ADJ</b>=상태/수치</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🧠 3. LLM 모방 발화 (그라운딩 비교)</h3>
+          
+        <div class="llm-block" style="border-left: 4px solid #7c3aed;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #7c3aed;">Qwen2.5-32B</span>
+            <span class="llm-score" style="background: #ef4444;">33% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Qwen2.5-32B] The gpu reading is 35 units. Compared to the 40 threshold, the system state is stable. Recommended action: continue monitoring.</div>
+          <div class="hallu">⚠ 환각: 2.5, -32, 40</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #0891b2;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #0891b2;">Llama 3.3-70B</span>
+            <span class="llm-score" style="background: #f59e0b;">66% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Llama-3.3-70B] In the current operational context, the gpu register indicates a value of 35, sitting in relation to the established threshold of 40. The system continues its steady observation, with the directive to maintain current course.</div>
+          <div class="hallu">⚠ 환각: -70, -3.3</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #059669;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #059669;">GPT-4</span>
+            <span class="llm-score" style="background: #ef4444;">33% 그라운딩</span>
+          </div>
+          <div class="llm-output">[GPT-4] GPU: 35 (threshold 40). Status: NOMINAL. Action required: none.</div>
+          <div class="hallu">⚠ 환각: 40, -4</div>
+        </div>
+        
+        </div>
+
+        <div class="section">
+          <h3>🔗 4. Robot-LLM-Robot Communication Chain</h3>
+          <div class="chain-container">
+            <div class="chain-step chain-sensor">[1. SENSOR ROBOT]  발화: &quot;[NOUN:gpu.value] [ADJ:35] [VERB:&gt;=] [NOUN:threshold] [ADJ:40] [ADJ:stable] [ADJ:STABLE]&quot;</div><div class="chain-step chain-llm">[2. LLM UNDERSTANDING]  해석: &quot;수치는 임계치 이내. 모니터링 지속.&quot;</div><div class="chain-step chain-actuator">[3. ACTUATOR ROBOT]  행동: [MOTOR] 속도 유지 (PWM 0%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="essay-card" id="card-gpu_2">
+      <div class="card-header" style="background: linear-gradient(135deg, #ff6b6b22, #ff6b6b11); border-left: 6px solid #ff6b6b;">
+        <div>
+          <span class="domain-badge" style="background: #ff6b6b;">GPU Thermal</span>
+          <span class="id-badge">gpu_2</span>
+          <span class="action-badge action-yes">ACTION</span>
+        </div>
+        <div class="scenario-info">
+          <span class="value-big">45</span>
+          <span class="comparison">>=</span>
+          <span class="threshold">40</span>
+          <span class="trend-badge">rising</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="section">
+          <h3>📄 1. 결정적 Essay (라이브 검증)</h3>
+          <div class="essay-text">This report describes the GPU Thermal sensor state. The system continuously monitors the physical state to determine whether intervention is required.
+
+The measurement shows that the gpu is 45. The gpu of 45 is higher than or equal to the threshold of 40. Move quickly.
+
+In conclusion, the system detected a threshold breach and responded with the action: Move quickly. The monitoring continues.</div>
+        </div>
+
+        <div class="section">
+          <h3>🤖 2. Robot Language (로봇어)</h3>
+          <div class="robot-lang"><code>[NOUN:gpu.value] [ADJ:45] [VERB:&gt;=] [NOUN:threshold] [ADJ:40] [ADJ:rising] [VERB:MOVE QUICKLY]</code></div>
+          <div class="legend">
+            <span><b>NOUN</b>=물리량</span> · <span><b>VERB</b>=행동/비교</span> · <span><b>ADJ</b>=상태/수치</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🧠 3. LLM 모방 발화 (그라운딩 비교)</h3>
+          
+        <div class="llm-block" style="border-left: 4px solid #7c3aed;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #7c3aed;">Qwen2.5-32B</span>
+            <span class="llm-score" style="background: #ef4444;">33% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Qwen2.5-32B] The gpu reading is 45 units. Compared to the 40 threshold, the system state is critical. Recommended action: Move quickly.</div>
+          <div class="hallu">⚠ 환각: 2.5, -32, 40</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #0891b2;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #0891b2;">Llama 3.3-70B</span>
+            <span class="llm-score" style="background: #f59e0b;">66% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Llama-3.3-70B] In the current operational context, the gpu register indicates a value of 45, sitting in relation to the established threshold of 40. The system must respond, with the directive Move quickly.</div>
+          <div class="hallu">⚠ 환각: -70, -3.3</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #059669;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #059669;">GPT-4</span>
+            <span class="llm-score" style="background: #ef4444;">33% 그라운딩</span>
+          </div>
+          <div class="llm-output">[GPT-4] GPU: 45 (threshold 40). Status: BREACH. Action required: Move quickly.</div>
+          <div class="hallu">⚠ 환각: 40, -4</div>
+        </div>
+        
+        </div>
+
+        <div class="section">
+          <h3>🔗 4. Robot-LLM-Robot Communication Chain</h3>
+          <div class="chain-container">
+            <div class="chain-step chain-sensor">[1. SENSOR ROBOT]  발화: &quot;[NOUN:gpu.value] [ADJ:45] [VERB:&gt;=] [NOUN:threshold] [ADJ:40] [ADJ:rising] [VERB:MOVE QUICKLY]&quot;</div><div class="chain-step chain-llm">[2. LLM UNDERSTANDING]  해석: &quot;수치가 임계치 초과. 액션: Move quickly.&quot;</div><div class="chain-step chain-actuator">[3. ACTUATOR ROBOT]  행동: [MOTOR] 속도 +50% (PWM 75%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="essay-card" id="card-gpu_3">
+      <div class="card-header" style="background: linear-gradient(135deg, #ff6b6b22, #ff6b6b11); border-left: 6px solid #ff6b6b;">
+        <div>
+          <span class="domain-badge" style="background: #ff6b6b;">GPU Thermal</span>
+          <span class="id-badge">gpu_3</span>
+          <span class="action-badge action-yes">ACTION</span>
+        </div>
+        <div class="scenario-info">
+          <span class="value-big">50</span>
+          <span class="comparison">>=</span>
+          <span class="threshold">40</span>
+          <span class="trend-badge">rising</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="section">
+          <h3>📄 1. 결정적 Essay (라이브 검증)</h3>
+          <div class="essay-text">This report describes the GPU Thermal sensor state. The system continuously monitors the physical state to determine whether intervention is required.
+
+The measurement shows that the gpu is 50. The gpu of 50 is higher than or equal to the threshold of 40. Move quickly.
+
+In conclusion, the system detected a threshold breach and responded with the action: Move quickly. The monitoring continues.</div>
+        </div>
+
+        <div class="section">
+          <h3>🤖 2. Robot Language (로봇어)</h3>
+          <div class="robot-lang"><code>[NOUN:gpu.value] [ADJ:50] [VERB:&gt;=] [NOUN:threshold] [ADJ:40] [ADJ:rising] [VERB:MOVE QUICKLY]</code></div>
+          <div class="legend">
+            <span><b>NOUN</b>=물리량</span> · <span><b>VERB</b>=행동/비교</span> · <span><b>ADJ</b>=상태/수치</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🧠 3. LLM 모방 발화 (그라운딩 비교)</h3>
+          
+        <div class="llm-block" style="border-left: 4px solid #7c3aed;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #7c3aed;">Qwen2.5-32B</span>
+            <span class="llm-score" style="background: #ef4444;">33% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Qwen2.5-32B] The gpu reading is 50 units. Compared to the 40 threshold, the system state is critical. Recommended action: Move quickly.</div>
+          <div class="hallu">⚠ 환각: 2.5, -32, 40</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #0891b2;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #0891b2;">Llama 3.3-70B</span>
+            <span class="llm-score" style="background: #f59e0b;">66% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Llama-3.3-70B] In the current operational context, the gpu register indicates a value of 50, sitting in relation to the established threshold of 40. The system must respond, with the directive Move quickly.</div>
+          <div class="hallu">⚠ 환각: -70, -3.3</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #059669;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #059669;">GPT-4</span>
+            <span class="llm-score" style="background: #ef4444;">33% 그라운딩</span>
+          </div>
+          <div class="llm-output">[GPT-4] GPU: 50 (threshold 40). Status: BREACH. Action required: Move quickly.</div>
+          <div class="hallu">⚠ 환각: 40, -4</div>
+        </div>
+        
+        </div>
+
+        <div class="section">
+          <h3>🔗 4. Robot-LLM-Robot Communication Chain</h3>
+          <div class="chain-container">
+            <div class="chain-step chain-sensor">[1. SENSOR ROBOT]  발화: &quot;[NOUN:gpu.value] [ADJ:50] [VERB:&gt;=] [NOUN:threshold] [ADJ:40] [ADJ:rising] [VERB:MOVE QUICKLY]&quot;</div><div class="chain-step chain-llm">[2. LLM UNDERSTANDING]  해석: &quot;수치가 임계치 초과. 액션: Move quickly.&quot;</div><div class="chain-step chain-actuator">[3. ACTUATOR ROBOT]  행동: [MOTOR] 속도 +50% (PWM 75%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="essay-card" id="card-gpu_4">
+      <div class="card-header" style="background: linear-gradient(135deg, #ff6b6b22, #ff6b6b11); border-left: 6px solid #ff6b6b;">
+        <div>
+          <span class="domain-badge" style="background: #ff6b6b;">GPU Thermal</span>
+          <span class="id-badge">gpu_4</span>
+          <span class="action-badge action-yes">ACTION</span>
+        </div>
+        <div class="scenario-info">
+          <span class="value-big">30</span>
+          <span class="comparison"><=</span>
+          <span class="threshold">35</span>
+          <span class="trend-badge">falling</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="section">
+          <h3>📄 1. 결정적 Essay (라이브 검증)</h3>
+          <div class="essay-text">This report describes the GPU Thermal sensor state. The system continuously monitors the physical state to determine whether intervention is required.
+
+The measurement shows that the gpu is 30. The gpu of 30 is below or equal to the threshold of 35. Check fan.
+
+In conclusion, the system detected a threshold breach and responded with the action: Check fan. The monitoring continues.</div>
+        </div>
+
+        <div class="section">
+          <h3>🤖 2. Robot Language (로봇어)</h3>
+          <div class="robot-lang"><code>[NOUN:gpu.value] [ADJ:30] [VERB:&lt;=] [NOUN:threshold] [ADJ:35] [ADJ:falling] [VERB:CHECK FAN]</code></div>
+          <div class="legend">
+            <span><b>NOUN</b>=물리량</span> · <span><b>VERB</b>=행동/비교</span> · <span><b>ADJ</b>=상태/수치</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🧠 3. LLM 모방 발화 (그라운딩 비교)</h3>
+          
+        <div class="llm-block" style="border-left: 4px solid #7c3aed;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #7c3aed;">Qwen2.5-32B</span>
+            <span class="llm-score" style="background: #ef4444;">33% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Qwen2.5-32B] The gpu reading is 30 units. Compared to the 35 threshold, the system state is critical. Recommended action: Check fan.</div>
+          <div class="hallu">⚠ 환각: 35, 2.5, -32</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #0891b2;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #0891b2;">Llama 3.3-70B</span>
+            <span class="llm-score" style="background: #f59e0b;">66% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Llama-3.3-70B] In the current operational context, the gpu register indicates a value of 30, sitting in relation to the established threshold of 35. The system must respond, with the directive Check fan.</div>
+          <div class="hallu">⚠ 환각: -70, -3.3</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #059669;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #059669;">GPT-4</span>
+            <span class="llm-score" style="background: #ef4444;">33% 그라운딩</span>
+          </div>
+          <div class="llm-output">[GPT-4] GPU: 30 (threshold 35). Status: BREACH. Action required: Check fan.</div>
+          <div class="hallu">⚠ 환각: 35, -4</div>
+        </div>
+        
+        </div>
+
+        <div class="section">
+          <h3>🔗 4. Robot-LLM-Robot Communication Chain</h3>
+          <div class="chain-container">
+            <div class="chain-step chain-sensor">[1. SENSOR ROBOT]  발화: &quot;[NOUN:gpu.value] [ADJ:30] [VERB:&lt;=] [NOUN:threshold] [ADJ:35] [ADJ:falling] [VERB:CHECK FAN]&quot;</div><div class="chain-step chain-llm">[2. LLM UNDERSTANDING]  해석: &quot;수치가 임계치 초과. 액션: Check fan.&quot;</div><div class="chain-step chain-actuator">[3. ACTUATOR ROBOT]  행동: [ACTUATOR] 팬 점검 (서보 활성화)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="domain-section">
+      <div class="domain-header" style="border-left-color: #4ecdc4;">
+        <h2>📡 Battery Health</h2>
+        <span class="count">4 essays</span>
+      </div>
+    
+    <div class="essay-card" id="card-battery_1">
+      <div class="card-header" style="background: linear-gradient(135deg, #4ecdc422, #4ecdc411); border-left: 6px solid #4ecdc4;">
+        <div>
+          <span class="domain-badge" style="background: #4ecdc4;">Battery Health</span>
+          <span class="id-badge">battery_1</span>
+          <span class="action-badge action-no">STABLE</span>
+        </div>
+        <div class="scenario-info">
+          <span class="value-big">12.4</span>
+          <span class="comparison"><=</span>
+          <span class="threshold">11.0</span>
+          <span class="trend-badge">stable</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="section">
+          <h3>📄 1. 결정적 Essay (라이브 검증)</h3>
+          <div class="essay-text">This report describes the Battery Health sensor state. The system continuously monitors the physical state to determine whether intervention is required.
+
+The measurement shows that the battery is 12.4. The battery of 12.4 is higher than the threshold of 11.0.
+
+In conclusion, the system observed stable operation. The monitoring continues.</div>
+        </div>
+
+        <div class="section">
+          <h3>🤖 2. Robot Language (로봇어)</h3>
+          <div class="robot-lang"><code>[NOUN:battery.value] [ADJ:12.4] [VERB:&lt;=] [NOUN:threshold] [ADJ:11.0] [ADJ:stable] [ADJ:STABLE]</code></div>
+          <div class="legend">
+            <span><b>NOUN</b>=물리량</span> · <span><b>VERB</b>=행동/비교</span> · <span><b>ADJ</b>=상태/수치</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🧠 3. LLM 모방 발화 (그라운딩 비교)</h3>
+          
+        <div class="llm-block" style="border-left: 4px solid #7c3aed;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #7c3aed;">Qwen2.5-32B</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Qwen2.5-32B] The battery reading is 12.4 units. Compared to the 11.0 threshold, the system state is stable. Recommended action: continue monitoring.</div>
+          <div class="hallu">⚠ 환각: 2.5, -32</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #0891b2;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #0891b2;">Llama 3.3-70B</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Llama-3.3-70B] In the current operational context, the battery register indicates a value of 12.4, sitting in relation to the established threshold of 11.0. The system continues its steady observation, with the directive to maintain current course.</div>
+          <div class="hallu">⚠ 환각: -70, -3.3</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #059669;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #059669;">GPT-4</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[GPT-4] BATTERY: 12.4 (threshold 11.0). Status: NOMINAL. Action required: none.</div>
+          <div class="hallu">⚠ 환각: -4</div>
+        </div>
+        
+        </div>
+
+        <div class="section">
+          <h3>🔗 4. Robot-LLM-Robot Communication Chain</h3>
+          <div class="chain-container">
+            <div class="chain-step chain-sensor">[1. SENSOR ROBOT]  발화: &quot;[NOUN:battery.value] [ADJ:12.4] [VERB:&lt;=] [NOUN:threshold] [ADJ:11.0] [ADJ:stable] [ADJ:STABLE]&quot;</div><div class="chain-step chain-llm">[2. LLM UNDERSTANDING]  해석: &quot;수치는 임계치 이내. 모니터링 지속.&quot;</div><div class="chain-step chain-actuator">[3. ACTUATOR ROBOT]  행동: [MOTOR] 속도 유지 (PWM 0%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="essay-card" id="card-battery_2">
+      <div class="card-header" style="background: linear-gradient(135deg, #4ecdc422, #4ecdc411); border-left: 6px solid #4ecdc4;">
+        <div>
+          <span class="domain-badge" style="background: #4ecdc4;">Battery Health</span>
+          <span class="id-badge">battery_2</span>
+          <span class="action-badge action-yes">ACTION</span>
+        </div>
+        <div class="scenario-info">
+          <span class="value-big">10.5</span>
+          <span class="comparison"><=</span>
+          <span class="threshold">11.0</span>
+          <span class="trend-badge">falling</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="section">
+          <h3>📄 1. 결정적 Essay (라이브 검증)</h3>
+          <div class="essay-text">This report describes the Battery Health sensor state. The system continuously monitors the physical state to determine whether intervention is required.
+
+The measurement shows that the battery is 10.5. The battery of 10.5 is below or equal to the threshold of 11.0. Return to base.
+
+In conclusion, the system detected a threshold breach and responded with the action: Return to base. The monitoring continues.</div>
+        </div>
+
+        <div class="section">
+          <h3>🤖 2. Robot Language (로봇어)</h3>
+          <div class="robot-lang"><code>[NOUN:battery.value] [ADJ:10.5] [VERB:&lt;=] [NOUN:threshold] [ADJ:11.0] [ADJ:falling] [VERB:RETURN TO BASE]</code></div>
+          <div class="legend">
+            <span><b>NOUN</b>=물리량</span> · <span><b>VERB</b>=행동/비교</span> · <span><b>ADJ</b>=상태/수치</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🧠 3. LLM 모방 발화 (그라운딩 비교)</h3>
+          
+        <div class="llm-block" style="border-left: 4px solid #7c3aed;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #7c3aed;">Qwen2.5-32B</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Qwen2.5-32B] The battery reading is 10.5 units. Compared to the 11.0 threshold, the system state is critical. Recommended action: Return to base.</div>
+          <div class="hallu">⚠ 환각: 2.5, -32</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #0891b2;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #0891b2;">Llama 3.3-70B</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Llama-3.3-70B] In the current operational context, the battery register indicates a value of 10.5, sitting in relation to the established threshold of 11.0. The system must respond, with the directive Return to base.</div>
+          <div class="hallu">⚠ 환각: -70, -3.3</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #059669;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #059669;">GPT-4</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[GPT-4] BATTERY: 10.5 (threshold 11.0). Status: BREACH. Action required: Return to base.</div>
+          <div class="hallu">⚠ 환각: -4</div>
+        </div>
+        
+        </div>
+
+        <div class="section">
+          <h3>🔗 4. Robot-LLM-Robot Communication Chain</h3>
+          <div class="chain-container">
+            <div class="chain-step chain-sensor">[1. SENSOR ROBOT]  발화: &quot;[NOUN:battery.value] [ADJ:10.5] [VERB:&lt;=] [NOUN:threshold] [ADJ:11.0] [ADJ:falling] [VERB:RETURN TO BASE]&quot;</div><div class="chain-step chain-llm">[2. LLM UNDERSTANDING]  해석: &quot;수치가 임계치 초과. 액션: Return to base.&quot;</div><div class="chain-step chain-actuator">[3. ACTUATOR ROBOT]  행동: [MOTOR] 역방향 + GPS 복귀 경로 활성화</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="essay-card" id="card-battery_3">
+      <div class="card-header" style="background: linear-gradient(135deg, #4ecdc422, #4ecdc411); border-left: 6px solid #4ecdc4;">
+        <div>
+          <span class="domain-badge" style="background: #4ecdc4;">Battery Health</span>
+          <span class="id-badge">battery_3</span>
+          <span class="action-badge action-yes">ACTION</span>
+        </div>
+        <div class="scenario-info">
+          <span class="value-big">9.8</span>
+          <span class="comparison"><=</span>
+          <span class="threshold">11.0</span>
+          <span class="trend-badge">falling</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="section">
+          <h3>📄 1. 결정적 Essay (라이브 검증)</h3>
+          <div class="essay-text">This report describes the Battery Health sensor state. The system continuously monitors the physical state to determine whether intervention is required.
+
+The measurement shows that the battery is 9.8. The battery of 9.8 is below or equal to the threshold of 11.0. Return to base.
+
+In conclusion, the system detected a threshold breach and responded with the action: Return to base. The monitoring continues.</div>
+        </div>
+
+        <div class="section">
+          <h3>🤖 2. Robot Language (로봇어)</h3>
+          <div class="robot-lang"><code>[NOUN:battery.value] [ADJ:9.8] [VERB:&lt;=] [NOUN:threshold] [ADJ:11.0] [ADJ:falling] [VERB:RETURN TO BASE]</code></div>
+          <div class="legend">
+            <span><b>NOUN</b>=물리량</span> · <span><b>VERB</b>=행동/비교</span> · <span><b>ADJ</b>=상태/수치</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🧠 3. LLM 모방 발화 (그라운딩 비교)</h3>
+          
+        <div class="llm-block" style="border-left: 4px solid #7c3aed;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #7c3aed;">Qwen2.5-32B</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Qwen2.5-32B] The battery reading is 9.8 units. Compared to the 11.0 threshold, the system state is critical. Recommended action: Return to base.</div>
+          <div class="hallu">⚠ 환각: 2.5, -32</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #0891b2;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #0891b2;">Llama 3.3-70B</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Llama-3.3-70B] In the current operational context, the battery register indicates a value of 9.8, sitting in relation to the established threshold of 11.0. The system must respond, with the directive Return to base.</div>
+          <div class="hallu">⚠ 환각: -70, -3.3</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #059669;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #059669;">GPT-4</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[GPT-4] BATTERY: 9.8 (threshold 11.0). Status: BREACH. Action required: Return to base.</div>
+          <div class="hallu">⚠ 환각: -4</div>
+        </div>
+        
+        </div>
+
+        <div class="section">
+          <h3>🔗 4. Robot-LLM-Robot Communication Chain</h3>
+          <div class="chain-container">
+            <div class="chain-step chain-sensor">[1. SENSOR ROBOT]  발화: &quot;[NOUN:battery.value] [ADJ:9.8] [VERB:&lt;=] [NOUN:threshold] [ADJ:11.0] [ADJ:falling] [VERB:RETURN TO BASE]&quot;</div><div class="chain-step chain-llm">[2. LLM UNDERSTANDING]  해석: &quot;수치가 임계치 초과. 액션: Return to base.&quot;</div><div class="chain-step chain-actuator">[3. ACTUATOR ROBOT]  행동: [MOTOR] 역방향 + GPS 복귀 경로 활성화</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="essay-card" id="card-battery_4">
+      <div class="card-header" style="background: linear-gradient(135deg, #4ecdc422, #4ecdc411); border-left: 6px solid #4ecdc4;">
+        <div>
+          <span class="domain-badge" style="background: #4ecdc4;">Battery Health</span>
+          <span class="id-badge">battery_4</span>
+          <span class="action-badge action-yes">ACTION</span>
+        </div>
+        <div class="scenario-info">
+          <span class="value-big">13.1</span>
+          <span class="comparison">>=</span>
+          <span class="threshold">12.0</span>
+          <span class="trend-badge">stable</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="section">
+          <h3>📄 1. 결정적 Essay (라이브 검증)</h3>
+          <div class="essay-text">This report describes the Battery Health sensor state. The system continuously monitors the physical state to determine whether intervention is required.
+
+The measurement shows that the battery is 13.1. The battery of 13.1 is higher than or equal to the threshold of 12.0. Charge alert.
+
+In conclusion, the system detected a threshold breach and responded with the action: Charge alert. The monitoring continues.</div>
+        </div>
+
+        <div class="section">
+          <h3>🤖 2. Robot Language (로봇어)</h3>
+          <div class="robot-lang"><code>[NOUN:battery.value] [ADJ:13.1] [VERB:&gt;=] [NOUN:threshold] [ADJ:12.0] [ADJ:stable] [VERB:CHARGE ALERT]</code></div>
+          <div class="legend">
+            <span><b>NOUN</b>=물리량</span> · <span><b>VERB</b>=행동/비교</span> · <span><b>ADJ</b>=상태/수치</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🧠 3. LLM 모방 발화 (그라운딩 비교)</h3>
+          
+        <div class="llm-block" style="border-left: 4px solid #7c3aed;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #7c3aed;">Qwen2.5-32B</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Qwen2.5-32B] The battery reading is 13.1 units. Compared to the 12.0 threshold, the system state is critical. Recommended action: Charge alert.</div>
+          <div class="hallu">⚠ 환각: 2.5, -32</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #0891b2;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #0891b2;">Llama 3.3-70B</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Llama-3.3-70B] In the current operational context, the battery register indicates a value of 13.1, sitting in relation to the established threshold of 12.0. The system must respond, with the directive Charge alert.</div>
+          <div class="hallu">⚠ 환각: -70, -3.3</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #059669;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #059669;">GPT-4</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[GPT-4] BATTERY: 13.1 (threshold 12.0). Status: BREACH. Action required: Charge alert.</div>
+          <div class="hallu">⚠ 환각: -4</div>
+        </div>
+        
+        </div>
+
+        <div class="section">
+          <h3>🔗 4. Robot-LLM-Robot Communication Chain</h3>
+          <div class="chain-container">
+            <div class="chain-step chain-sensor">[1. SENSOR ROBOT]  발화: &quot;[NOUN:battery.value] [ADJ:13.1] [VERB:&gt;=] [NOUN:threshold] [ADJ:12.0] [ADJ:stable] [VERB:CHARGE ALERT]&quot;</div><div class="chain-step chain-llm">[2. LLM UNDERSTANDING]  해석: &quot;수치가 임계치 초과. 액션: Charge alert.&quot;</div><div class="chain-step chain-actuator">[3. ACTUATOR ROBOT]  행동: [MOTOR] 충전소로 이동 + 충전기 활성화</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="domain-section">
+      <div class="domain-header" style="border-left-color: #ffe66d;">
+        <h2>📡 Motor Operation</h2>
+        <span class="count">4 essays</span>
+      </div>
+    
+    <div class="essay-card" id="card-motor_1">
+      <div class="card-header" style="background: linear-gradient(135deg, #ffe66d22, #ffe66d11); border-left: 6px solid #ffe66d;">
+        <div>
+          <span class="domain-badge" style="background: #ffe66d;">Motor Operation</span>
+          <span class="id-badge">motor_1</span>
+          <span class="action-badge action-no">STABLE</span>
+        </div>
+        <div class="scenario-info">
+          <span class="value-big">35</span>
+          <span class="comparison">>=</span>
+          <span class="threshold">80</span>
+          <span class="trend-badge">stable</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="section">
+          <h3>📄 1. 결정적 Essay (라이브 검증)</h3>
+          <div class="essay-text">This report describes the Motor Operation sensor state. The system continuously monitors the physical state to determine whether intervention is required.
+
+The measurement shows that the motor is 35. The motor of 35 is below the threshold of 80.
+
+In conclusion, the system observed stable operation. The monitoring continues.</div>
+        </div>
+
+        <div class="section">
+          <h3>🤖 2. Robot Language (로봇어)</h3>
+          <div class="robot-lang"><code>[NOUN:motor.value] [ADJ:35] [VERB:&gt;=] [NOUN:threshold] [ADJ:80] [ADJ:stable] [ADJ:STABLE]</code></div>
+          <div class="legend">
+            <span><b>NOUN</b>=물리량</span> · <span><b>VERB</b>=행동/비교</span> · <span><b>ADJ</b>=상태/수치</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🧠 3. LLM 모방 발화 (그라운딩 비교)</h3>
+          
+        <div class="llm-block" style="border-left: 4px solid #7c3aed;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #7c3aed;">Qwen2.5-32B</span>
+            <span class="llm-score" style="background: #ef4444;">33% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Qwen2.5-32B] The motor reading is 35 units. Compared to the 80 threshold, the system state is stable. Recommended action: continue monitoring.</div>
+          <div class="hallu">⚠ 환각: 2.5, -32, 80</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #0891b2;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #0891b2;">Llama 3.3-70B</span>
+            <span class="llm-score" style="background: #f59e0b;">66% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Llama-3.3-70B] In the current operational context, the motor register indicates a value of 35, sitting in relation to the established threshold of 80. The system continues its steady observation, with the directive to maintain current course.</div>
+          <div class="hallu">⚠ 환각: -70, -3.3</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #059669;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #059669;">GPT-4</span>
+            <span class="llm-score" style="background: #ef4444;">33% 그라운딩</span>
+          </div>
+          <div class="llm-output">[GPT-4] MOTOR: 35 (threshold 80). Status: NOMINAL. Action required: none.</div>
+          <div class="hallu">⚠ 환각: -4, 80</div>
+        </div>
+        
+        </div>
+
+        <div class="section">
+          <h3>🔗 4. Robot-LLM-Robot Communication Chain</h3>
+          <div class="chain-container">
+            <div class="chain-step chain-sensor">[1. SENSOR ROBOT]  발화: &quot;[NOUN:motor.value] [ADJ:35] [VERB:&gt;=] [NOUN:threshold] [ADJ:80] [ADJ:stable] [ADJ:STABLE]&quot;</div><div class="chain-step chain-llm">[2. LLM UNDERSTANDING]  해석: &quot;수치는 임계치 이내. 모니터링 지속.&quot;</div><div class="chain-step chain-actuator">[3. ACTUATOR ROBOT]  행동: [MOTOR] 속도 유지 (PWM 0%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="essay-card" id="card-motor_2">
+      <div class="card-header" style="background: linear-gradient(135deg, #ffe66d22, #ffe66d11); border-left: 6px solid #ffe66d;">
+        <div>
+          <span class="domain-badge" style="background: #ffe66d;">Motor Operation</span>
+          <span class="id-badge">motor_2</span>
+          <span class="action-badge action-yes">ACTION</span>
+        </div>
+        <div class="scenario-info">
+          <span class="value-big">85</span>
+          <span class="comparison">>=</span>
+          <span class="threshold">80</span>
+          <span class="trend-badge">rising</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="section">
+          <h3>📄 1. 결정적 Essay (라이브 검증)</h3>
+          <div class="essay-text">This report describes the Motor Operation sensor state. The system continuously monitors the physical state to determine whether intervention is required.
+
+The measurement shows that the motor is 85. The motor of 85 is higher than or equal to the threshold of 80. Stop motor.
+
+In conclusion, the system detected a threshold breach and responded with the action: Stop motor. The monitoring continues.</div>
+        </div>
+
+        <div class="section">
+          <h3>🤖 2. Robot Language (로봇어)</h3>
+          <div class="robot-lang"><code>[NOUN:motor.value] [ADJ:85] [VERB:&gt;=] [NOUN:threshold] [ADJ:80] [ADJ:rising] [VERB:STOP MOTOR]</code></div>
+          <div class="legend">
+            <span><b>NOUN</b>=물리량</span> · <span><b>VERB</b>=행동/비교</span> · <span><b>ADJ</b>=상태/수치</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🧠 3. LLM 모방 발화 (그라운딩 비교)</h3>
+          
+        <div class="llm-block" style="border-left: 4px solid #7c3aed;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #7c3aed;">Qwen2.5-32B</span>
+            <span class="llm-score" style="background: #ef4444;">33% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Qwen2.5-32B] The motor reading is 85 units. Compared to the 80 threshold, the system state is critical. Recommended action: Stop motor.</div>
+          <div class="hallu">⚠ 환각: 2.5, -32, 80</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #0891b2;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #0891b2;">Llama 3.3-70B</span>
+            <span class="llm-score" style="background: #f59e0b;">66% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Llama-3.3-70B] In the current operational context, the motor register indicates a value of 85, sitting in relation to the established threshold of 80. The system must respond, with the directive Stop motor.</div>
+          <div class="hallu">⚠ 환각: -70, -3.3</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #059669;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #059669;">GPT-4</span>
+            <span class="llm-score" style="background: #ef4444;">33% 그라운딩</span>
+          </div>
+          <div class="llm-output">[GPT-4] MOTOR: 85 (threshold 80). Status: BREACH. Action required: Stop motor.</div>
+          <div class="hallu">⚠ 환각: -4, 80</div>
+        </div>
+        
+        </div>
+
+        <div class="section">
+          <h3>🔗 4. Robot-LLM-Robot Communication Chain</h3>
+          <div class="chain-container">
+            <div class="chain-step chain-sensor">[1. SENSOR ROBOT]  발화: &quot;[NOUN:motor.value] [ADJ:85] [VERB:&gt;=] [NOUN:threshold] [ADJ:80] [ADJ:rising] [VERB:STOP MOTOR]&quot;</div><div class="chain-step chain-llm">[2. LLM UNDERSTANDING]  해석: &quot;수치가 임계치 초과. 액션: Stop motor.&quot;</div><div class="chain-step chain-actuator">[3. ACTUATOR ROBOT]  행동: [MOTOR] 즉시 정지 (PWM 0%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="essay-card" id="card-motor_3">
+      <div class="card-header" style="background: linear-gradient(135deg, #ffe66d22, #ffe66d11); border-left: 6px solid #ffe66d;">
+        <div>
+          <span class="domain-badge" style="background: #ffe66d;">Motor Operation</span>
+          <span class="id-badge">motor_3</span>
+          <span class="action-badge action-yes">ACTION</span>
+        </div>
+        <div class="scenario-info">
+          <span class="value-big">95</span>
+          <span class="comparison">>=</span>
+          <span class="threshold">80</span>
+          <span class="trend-badge">rising</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="section">
+          <h3>📄 1. 결정적 Essay (라이브 검증)</h3>
+          <div class="essay-text">This report describes the Motor Operation sensor state. The system continuously monitors the physical state to determine whether intervention is required.
+
+The measurement shows that the motor is 95. The motor of 95 is higher than or equal to the threshold of 80. Stop motor.
+
+In conclusion, the system detected a threshold breach and responded with the action: Stop motor. The monitoring continues.</div>
+        </div>
+
+        <div class="section">
+          <h3>🤖 2. Robot Language (로봇어)</h3>
+          <div class="robot-lang"><code>[NOUN:motor.value] [ADJ:95] [VERB:&gt;=] [NOUN:threshold] [ADJ:80] [ADJ:rising] [VERB:STOP MOTOR]</code></div>
+          <div class="legend">
+            <span><b>NOUN</b>=물리량</span> · <span><b>VERB</b>=행동/비교</span> · <span><b>ADJ</b>=상태/수치</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🧠 3. LLM 모방 발화 (그라운딩 비교)</h3>
+          
+        <div class="llm-block" style="border-left: 4px solid #7c3aed;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #7c3aed;">Qwen2.5-32B</span>
+            <span class="llm-score" style="background: #ef4444;">33% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Qwen2.5-32B] The motor reading is 95 units. Compared to the 80 threshold, the system state is critical. Recommended action: Stop motor.</div>
+          <div class="hallu">⚠ 환각: 2.5, -32, 80</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #0891b2;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #0891b2;">Llama 3.3-70B</span>
+            <span class="llm-score" style="background: #f59e0b;">66% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Llama-3.3-70B] In the current operational context, the motor register indicates a value of 95, sitting in relation to the established threshold of 80. The system must respond, with the directive Stop motor.</div>
+          <div class="hallu">⚠ 환각: -70, -3.3</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #059669;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #059669;">GPT-4</span>
+            <span class="llm-score" style="background: #ef4444;">33% 그라운딩</span>
+          </div>
+          <div class="llm-output">[GPT-4] MOTOR: 95 (threshold 80). Status: BREACH. Action required: Stop motor.</div>
+          <div class="hallu">⚠ 환각: -4, 80</div>
+        </div>
+        
+        </div>
+
+        <div class="section">
+          <h3>🔗 4. Robot-LLM-Robot Communication Chain</h3>
+          <div class="chain-container">
+            <div class="chain-step chain-sensor">[1. SENSOR ROBOT]  발화: &quot;[NOUN:motor.value] [ADJ:95] [VERB:&gt;=] [NOUN:threshold] [ADJ:80] [ADJ:rising] [VERB:STOP MOTOR]&quot;</div><div class="chain-step chain-llm">[2. LLM UNDERSTANDING]  해석: &quot;수치가 임계치 초과. 액션: Stop motor.&quot;</div><div class="chain-step chain-actuator">[3. ACTUATOR ROBOT]  행동: [MOTOR] 즉시 정지 (PWM 0%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="essay-card" id="card-motor_4">
+      <div class="card-header" style="background: linear-gradient(135deg, #ffe66d22, #ffe66d11); border-left: 6px solid #ffe66d;">
+        <div>
+          <span class="domain-badge" style="background: #ffe66d;">Motor Operation</span>
+          <span class="id-badge">motor_4</span>
+          <span class="action-badge action-yes">ACTION</span>
+        </div>
+        <div class="scenario-info">
+          <span class="value-big">15</span>
+          <span class="comparison"><=</span>
+          <span class="threshold">20</span>
+          <span class="trend-badge">falling</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="section">
+          <h3>📄 1. 결정적 Essay (라이브 검증)</h3>
+          <div class="essay-text">This report describes the Motor Operation sensor state. The system continuously monitors the physical state to determine whether intervention is required.
+
+The measurement shows that the motor is 15. The motor of 15 is below or equal to the threshold of 20. Heat motor.
+
+In conclusion, the system detected a threshold breach and responded with the action: Heat motor. The monitoring continues.</div>
+        </div>
+
+        <div class="section">
+          <h3>🤖 2. Robot Language (로봇어)</h3>
+          <div class="robot-lang"><code>[NOUN:motor.value] [ADJ:15] [VERB:&lt;=] [NOUN:threshold] [ADJ:20] [ADJ:falling] [VERB:HEAT MOTOR]</code></div>
+          <div class="legend">
+            <span><b>NOUN</b>=물리량</span> · <span><b>VERB</b>=행동/비교</span> · <span><b>ADJ</b>=상태/수치</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🧠 3. LLM 모방 발화 (그라운딩 비교)</h3>
+          
+        <div class="llm-block" style="border-left: 4px solid #7c3aed;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #7c3aed;">Qwen2.5-32B</span>
+            <span class="llm-score" style="background: #ef4444;">33% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Qwen2.5-32B] The motor reading is 15 units. Compared to the 20 threshold, the system state is critical. Recommended action: Heat motor.</div>
+          <div class="hallu">⚠ 환각: 20, 2.5, -32</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #0891b2;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #0891b2;">Llama 3.3-70B</span>
+            <span class="llm-score" style="background: #f59e0b;">66% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Llama-3.3-70B] In the current operational context, the motor register indicates a value of 15, sitting in relation to the established threshold of 20. The system must respond, with the directive Heat motor.</div>
+          <div class="hallu">⚠ 환각: -70, -3.3</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #059669;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #059669;">GPT-4</span>
+            <span class="llm-score" style="background: #ef4444;">33% 그라운딩</span>
+          </div>
+          <div class="llm-output">[GPT-4] MOTOR: 15 (threshold 20). Status: BREACH. Action required: Heat motor.</div>
+          <div class="hallu">⚠ 환각: 20, -4</div>
+        </div>
+        
+        </div>
+
+        <div class="section">
+          <h3>🔗 4. Robot-LLM-Robot Communication Chain</h3>
+          <div class="chain-container">
+            <div class="chain-step chain-sensor">[1. SENSOR ROBOT]  발화: &quot;[NOUN:motor.value] [ADJ:15] [VERB:&lt;=] [NOUN:threshold] [ADJ:20] [ADJ:falling] [VERB:HEAT MOTOR]&quot;</div><div class="chain-step chain-llm">[2. LLM UNDERSTANDING]  해석: &quot;수치가 임계치 초과. 액션: Heat motor.&quot;</div><div class="chain-step chain-actuator">[3. ACTUATOR ROBOT]  행동: [MOTOR] 예열 모드 (저속 PWM 30%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="domain-section">
+      <div class="domain-header" style="border-left-color: #a8e6cf;">
+        <h2>📡 LiDAR Proximity</h2>
+        <span class="count">4 essays</span>
+      </div>
+    
+    <div class="essay-card" id="card-lidar_1">
+      <div class="card-header" style="background: linear-gradient(135deg, #a8e6cf22, #a8e6cf11); border-left: 6px solid #a8e6cf;">
+        <div>
+          <span class="domain-badge" style="background: #a8e6cf;">LiDAR Proximity</span>
+          <span class="id-badge">lidar_1</span>
+          <span class="action-badge action-no">STABLE</span>
+        </div>
+        <div class="scenario-info">
+          <span class="value-big">2.4</span>
+          <span class="comparison"><=</span>
+          <span class="threshold">0.5</span>
+          <span class="trend-badge">stable</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="section">
+          <h3>📄 1. 결정적 Essay (라이브 검증)</h3>
+          <div class="essay-text">This report describes the LiDAR Proximity sensor state. The system continuously monitors the physical state to determine whether intervention is required.
+
+The measurement shows that the lidar is 2.4. The lidar of 2.4 is higher than the threshold of 0.5.
+
+In conclusion, the system observed stable operation. The monitoring continues.</div>
+        </div>
+
+        <div class="section">
+          <h3>🤖 2. Robot Language (로봇어)</h3>
+          <div class="robot-lang"><code>[NOUN:lidar.value] [ADJ:2.4] [VERB:&lt;=] [NOUN:threshold] [ADJ:0.5] [ADJ:stable] [ADJ:STABLE]</code></div>
+          <div class="legend">
+            <span><b>NOUN</b>=물리량</span> · <span><b>VERB</b>=행동/비교</span> · <span><b>ADJ</b>=상태/수치</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🧠 3. LLM 모방 발화 (그라운딩 비교)</h3>
+          
+        <div class="llm-block" style="border-left: 4px solid #7c3aed;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #7c3aed;">Qwen2.5-32B</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Qwen2.5-32B] The lidar reading is 2.4 units. Compared to the 0.5 threshold, the system state is stable. Recommended action: continue monitoring.</div>
+          <div class="hallu">⚠ 환각: 2.5, -32</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #0891b2;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #0891b2;">Llama 3.3-70B</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Llama-3.3-70B] In the current operational context, the lidar register indicates a value of 2.4, sitting in relation to the established threshold of 0.5. The system continues its steady observation, with the directive to maintain current course.</div>
+          <div class="hallu">⚠ 환각: -70, -3.3</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #059669;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #059669;">GPT-4</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[GPT-4] LIDAR: 2.4 (threshold 0.5). Status: NOMINAL. Action required: none.</div>
+          <div class="hallu">⚠ 환각: -4</div>
+        </div>
+        
+        </div>
+
+        <div class="section">
+          <h3>🔗 4. Robot-LLM-Robot Communication Chain</h3>
+          <div class="chain-container">
+            <div class="chain-step chain-sensor">[1. SENSOR ROBOT]  발화: &quot;[NOUN:lidar.value] [ADJ:2.4] [VERB:&lt;=] [NOUN:threshold] [ADJ:0.5] [ADJ:stable] [ADJ:STABLE]&quot;</div><div class="chain-step chain-llm">[2. LLM UNDERSTANDING]  해석: &quot;수치는 임계치 이내. 모니터링 지속.&quot;</div><div class="chain-step chain-actuator">[3. ACTUATOR ROBOT]  행동: [MOTOR] 속도 유지 (PWM 0%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="essay-card" id="card-lidar_2">
+      <div class="card-header" style="background: linear-gradient(135deg, #a8e6cf22, #a8e6cf11); border-left: 6px solid #a8e6cf;">
+        <div>
+          <span class="domain-badge" style="background: #a8e6cf;">LiDAR Proximity</span>
+          <span class="id-badge">lidar_2</span>
+          <span class="action-badge action-yes">ACTION</span>
+        </div>
+        <div class="scenario-info">
+          <span class="value-big">0.4</span>
+          <span class="comparison"><=</span>
+          <span class="threshold">0.5</span>
+          <span class="trend-badge">falling</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="section">
+          <h3>📄 1. 결정적 Essay (라이브 검증)</h3>
+          <div class="essay-text">This report describes the LiDAR Proximity sensor state. The system continuously monitors the physical state to determine whether intervention is required.
+
+The measurement shows that the lidar is 0.4. The lidar of 0.4 is below or equal to the threshold of 0.5. Stop immediately.
+
+In conclusion, the system detected a threshold breach and responded with the action: Stop immediately. The monitoring continues.</div>
+        </div>
+
+        <div class="section">
+          <h3>🤖 2. Robot Language (로봇어)</h3>
+          <div class="robot-lang"><code>[NOUN:lidar.value] [ADJ:0.4] [VERB:&lt;=] [NOUN:threshold] [ADJ:0.5] [ADJ:falling] [VERB:STOP IMMEDIATELY]</code></div>
+          <div class="legend">
+            <span><b>NOUN</b>=물리량</span> · <span><b>VERB</b>=행동/비교</span> · <span><b>ADJ</b>=상태/수치</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🧠 3. LLM 모방 발화 (그라운딩 비교)</h3>
+          
+        <div class="llm-block" style="border-left: 4px solid #7c3aed;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #7c3aed;">Qwen2.5-32B</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Qwen2.5-32B] The lidar reading is 0.4 units. Compared to the 0.5 threshold, the system state is critical. Recommended action: Stop immediately.</div>
+          <div class="hallu">⚠ 환각: 2.5, -32</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #0891b2;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #0891b2;">Llama 3.3-70B</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Llama-3.3-70B] In the current operational context, the lidar register indicates a value of 0.4, sitting in relation to the established threshold of 0.5. The system must respond, with the directive Stop immediately.</div>
+          <div class="hallu">⚠ 환각: -70, -3.3</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #059669;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #059669;">GPT-4</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[GPT-4] LIDAR: 0.4 (threshold 0.5). Status: BREACH. Action required: Stop immediately.</div>
+          <div class="hallu">⚠ 환각: -4</div>
+        </div>
+        
+        </div>
+
+        <div class="section">
+          <h3>🔗 4. Robot-LLM-Robot Communication Chain</h3>
+          <div class="chain-container">
+            <div class="chain-step chain-sensor">[1. SENSOR ROBOT]  발화: &quot;[NOUN:lidar.value] [ADJ:0.4] [VERB:&lt;=] [NOUN:threshold] [ADJ:0.5] [ADJ:falling] [VERB:STOP IMMEDIATELY]&quot;</div><div class="chain-step chain-llm">[2. LLM UNDERSTANDING]  해석: &quot;수치가 임계치 초과. 액션: Stop immediately.&quot;</div><div class="chain-step chain-actuator">[3. ACTUATOR ROBOT]  행동: [MOTOR] 비상 정지 + 브레이크</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="essay-card" id="card-lidar_3">
+      <div class="card-header" style="background: linear-gradient(135deg, #a8e6cf22, #a8e6cf11); border-left: 6px solid #a8e6cf;">
+        <div>
+          <span class="domain-badge" style="background: #a8e6cf;">LiDAR Proximity</span>
+          <span class="id-badge">lidar_3</span>
+          <span class="action-badge action-yes">ACTION</span>
+        </div>
+        <div class="scenario-info">
+          <span class="value-big">0.2</span>
+          <span class="comparison"><=</span>
+          <span class="threshold">0.5</span>
+          <span class="trend-badge">falling</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="section">
+          <h3>📄 1. 결정적 Essay (라이브 검증)</h3>
+          <div class="essay-text">This report describes the LiDAR Proximity sensor state. The system continuously monitors the physical state to determine whether intervention is required.
+
+The measurement shows that the lidar is 0.2. The lidar of 0.2 is below or equal to the threshold of 0.5. Stop immediately.
+
+In conclusion, the system detected a threshold breach and responded with the action: Stop immediately. The monitoring continues.</div>
+        </div>
+
+        <div class="section">
+          <h3>🤖 2. Robot Language (로봇어)</h3>
+          <div class="robot-lang"><code>[NOUN:lidar.value] [ADJ:0.2] [VERB:&lt;=] [NOUN:threshold] [ADJ:0.5] [ADJ:falling] [VERB:STOP IMMEDIATELY]</code></div>
+          <div class="legend">
+            <span><b>NOUN</b>=물리량</span> · <span><b>VERB</b>=행동/비교</span> · <span><b>ADJ</b>=상태/수치</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🧠 3. LLM 모방 발화 (그라운딩 비교)</h3>
+          
+        <div class="llm-block" style="border-left: 4px solid #7c3aed;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #7c3aed;">Qwen2.5-32B</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Qwen2.5-32B] The lidar reading is 0.2 units. Compared to the 0.5 threshold, the system state is critical. Recommended action: Stop immediately.</div>
+          <div class="hallu">⚠ 환각: 2.5, -32</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #0891b2;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #0891b2;">Llama 3.3-70B</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Llama-3.3-70B] In the current operational context, the lidar register indicates a value of 0.2, sitting in relation to the established threshold of 0.5. The system must respond, with the directive Stop immediately.</div>
+          <div class="hallu">⚠ 환각: -70, -3.3</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #059669;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #059669;">GPT-4</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[GPT-4] LIDAR: 0.2 (threshold 0.5). Status: BREACH. Action required: Stop immediately.</div>
+          <div class="hallu">⚠ 환각: -4</div>
+        </div>
+        
+        </div>
+
+        <div class="section">
+          <h3>🔗 4. Robot-LLM-Robot Communication Chain</h3>
+          <div class="chain-container">
+            <div class="chain-step chain-sensor">[1. SENSOR ROBOT]  발화: &quot;[NOUN:lidar.value] [ADJ:0.2] [VERB:&lt;=] [NOUN:threshold] [ADJ:0.5] [ADJ:falling] [VERB:STOP IMMEDIATELY]&quot;</div><div class="chain-step chain-llm">[2. LLM UNDERSTANDING]  해석: &quot;수치가 임계치 초과. 액션: Stop immediately.&quot;</div><div class="chain-step chain-actuator">[3. ACTUATOR ROBOT]  행동: [MOTOR] 비상 정지 + 브레이크</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="essay-card" id="card-lidar_4">
+      <div class="card-header" style="background: linear-gradient(135deg, #a8e6cf22, #a8e6cf11); border-left: 6px solid #a8e6cf;">
+        <div>
+          <span class="domain-badge" style="background: #a8e6cf;">LiDAR Proximity</span>
+          <span class="id-badge">lidar_4</span>
+          <span class="action-badge action-yes">ACTION</span>
+        </div>
+        <div class="scenario-info">
+          <span class="value-big">5.0</span>
+          <span class="comparison">>=</span>
+          <span class="threshold">3.0</span>
+          <span class="trend-badge">stable</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="section">
+          <h3>📄 1. 결정적 Essay (라이브 검증)</h3>
+          <div class="essay-text">This report describes the LiDAR Proximity sensor state. The system continuously monitors the physical state to determine whether intervention is required.
+
+The measurement shows that the lidar is 5.0. The lidar of 5.0 is higher than or equal to the threshold of 3.0. Slow down.
+
+In conclusion, the system detected a threshold breach and responded with the action: Slow down. The monitoring continues.</div>
+        </div>
+
+        <div class="section">
+          <h3>🤖 2. Robot Language (로봇어)</h3>
+          <div class="robot-lang"><code>[NOUN:lidar.value] [ADJ:5.0] [VERB:&gt;=] [NOUN:threshold] [ADJ:3.0] [ADJ:stable] [VERB:SLOW DOWN]</code></div>
+          <div class="legend">
+            <span><b>NOUN</b>=물리량</span> · <span><b>VERB</b>=행동/비교</span> · <span><b>ADJ</b>=상태/수치</span>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🧠 3. LLM 모방 발화 (그라운딩 비교)</h3>
+          
+        <div class="llm-block" style="border-left: 4px solid #7c3aed;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #7c3aed;">Qwen2.5-32B</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Qwen2.5-32B] The lidar reading is 5.0 units. Compared to the 3.0 threshold, the system state is critical. Recommended action: Slow down.</div>
+          <div class="hallu">⚠ 환각: 2.5, -32</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #0891b2;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #0891b2;">Llama 3.3-70B</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[Llama-3.3-70B] In the current operational context, the lidar register indicates a value of 5.0, sitting in relation to the established threshold of 3.0. The system must respond, with the directive Slow down.</div>
+          <div class="hallu">⚠ 환각: -70, -3.3</div>
+        </div>
+        
+        <div class="llm-block" style="border-left: 4px solid #059669;">
+          <div class="llm-header">
+            <span class="llm-name" style="color: #059669;">GPT-4</span>
+            <span class="llm-score" style="background: #10b981;">100% 그라운딩</span>
+          </div>
+          <div class="llm-output">[GPT-4] LIDAR: 5.0 (threshold 3.0). Status: BREACH. Action required: Slow down.</div>
+          <div class="hallu">⚠ 환각: -4</div>
+        </div>
+        
+        </div>
+
+        <div class="section">
+          <h3>🔗 4. Robot-LLM-Robot Communication Chain</h3>
+          <div class="chain-container">
+            <div class="chain-step chain-sensor">[1. SENSOR ROBOT]  발화: &quot;[NOUN:lidar.value] [ADJ:5.0] [VERB:&gt;=] [NOUN:threshold] [ADJ:3.0] [ADJ:stable] [VERB:SLOW DOWN]&quot;</div><div class="chain-step chain-llm">[2. LLM UNDERSTANDING]  해석: &quot;수치가 임계치 초과. 액션: Slow down.&quot;</div><div class="chain-step chain-actuator">[3. ACTUATOR ROBOT]  행동: [MOTOR] 감속 (PWM 25%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</body>
+</html>
